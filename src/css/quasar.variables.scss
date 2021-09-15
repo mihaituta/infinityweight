@@ -12,9 +12,17 @@
 // to match your app's branding.
 // Tip: Use the "Theme Builder" on Quasar's documentation website.
 
-$primary   : #1976D2;
-$secondary : #26A69A;
+$primary   : hsl(0, 0%, 7%);
+$secondary : hsl(153, 48%, 49%);
 $accent    : #9C27B0;
+
+$primary-200: hsl(0, 0%, 15%);
+$primary-300: hsl(0, 0%, 13%);
+$primary-400: hsl(0, 0%, 10%);
+$primary-500: hsl(0, 0%, 7%);
+
+$secondary-500: hsl(153, 48%, 49%);
+$secondary-300: hsl(153, 100%, 60%);
 
 $dark      : #1D1D1D;
 
