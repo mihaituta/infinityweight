@@ -1,12 +1,17 @@
 <template>
   <q-form
     @submit="onSubmit"
-    class=""
+    greedy
+    class="auth-form"
   >
+    <h1 class="text-center text-capitalize openSans">
+      {{ tab }}
+    </h1>
     <q-input
+      dark
       v-if="tab === 'register'"
-      class="q-mb-md"
-      standard
+      class="form-input q-mb-md"
+      filled
       color="secondary"
       v-model="formData.name"
       label="Name"
@@ -19,8 +24,9 @@
     </q-input>
 
     <q-input
-      standard
-      class="q-mb-md"
+      dark
+      filled
+      class="form-input q-mb-md"
       color="secondary"
       type="email"
       v-model="formData.email"
@@ -34,8 +40,9 @@
     </q-input>
 
     <q-input
-      standard
-      class="q-mb-md"
+      dark
+      filled
+      class="form-input q-mb-md"
       color="secondary"
       v-model="formData.password"
       label="Password"
@@ -55,12 +62,13 @@
       </template>
     </q-input>
 
-    <div>
-      <q-btn
-        :label="tab"
-        type="submit"
-        color="secondary"/>
-    </div>
+    <q-btn
+      :label="tab"
+      dark
+      type="submit"
+      class="form-btn bg-secondary text-primary q-px-xl q-py-sm text-weight-bold full-width"
+    />
+
   </q-form>
 </template>
 
@@ -74,8 +82,8 @@ export default {
       isPwd: true,
       formData: {
         name: '',
-        email: '1@gmail.com',
-        password: '123123'
+        email: '',
+        password: ''
       }
     }
   },
@@ -92,6 +100,17 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.form-btn {
+  font-size: 1.2rem;
+}
+
+.form-input {
+  font-size: 1.2rem;
+}
+
+.auth-form h1 {
+  font-size: 3rem;
+}
 
 </style>

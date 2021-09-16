@@ -6,3 +6,31 @@ $primary-500: hsl(0, 0%, 7%);
 
 $secondary-500: hsl(153, 48%, 49%);
 $secondary-300: hsl(153, 100%, 60%);
+
+@font-face {
+  font-family: OpenSans;
+  src: url('./fonts/OpenSans-Light.ttf');
+  font-weight: 200;
+}
+
+@font-face {
+  font-family: OpenSans;
+  src: url('./fonts/OpenSans-Regular.ttf');
+  font-weight: 400;
+}
+
+.openSans {
+  font-family: 'OpenSans', sans-serif;
+}
+
+//@font-face {
+//  font-family: Nunito;
+//  src: url("../assets/fonts/Nunito-Regular.ttf") format("truetype");
+//  font-weight: normal;
+//}
+//
+//@font-face {
+//  font-family: Nunito;
+//  src: url("../assets/fonts/Nunito-Bold.ttf") format("truetype");
+//  font-weight: bold;
+//}

@@ -1,12 +1,12 @@
 <template>
-  <q-page class="flex q-pa-md">
-    <q-card class="full-width">
+  <q-page class="flex q-pa-lg">
+    <q-card dark class="full-width">
       <q-tabs
+        dark
         v-model="tab"
-        class="text-primary"
         active-color="secondary"
         indicator-color="secondary"
-        align="justify"
+        class="auth-tabs"
       >
         <q-tab name="login" label="Login"/>
         <q-tab name="register" label="Register"/>
@@ -14,8 +14,12 @@
 
       <q-separator/>
 
-      <q-tab-panels v-model="tab" animated>
-
+      <q-tab-panels
+        dark
+        v-model="tab"
+        animated
+        swipeable
+      >
         <q-tab-panel name="login">
           <auth-form :tab="tab"/>
         </q-tab-panel>
@@ -42,6 +46,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+.auth-tabs .q-tab__label {
+  font-size: 1.2rem;
+}
 </style>

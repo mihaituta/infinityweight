@@ -1,17 +1,17 @@
-
 const routes = [
   {
     path: '/',
     component: () => import('layouts/MainLayout'),
-    children:[
-      { path: '/', component: () => import('pages/Index.vue') },
+    meta: {requiresAuth: true},
+    children: [
+      {path: '/', component: () => import('pages/Index.vue')},
     ]
   },
   {
-    path: '/',
+    path: '/auth',
     component: () => import('layouts/notAuth'),
     children: [
-      { path: '/auth', component: () => import('pages/Auth') },
+      {path: '/auth', component: () => import('pages/Auth')},
     ]
   },
 

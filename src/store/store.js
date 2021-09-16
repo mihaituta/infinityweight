@@ -78,8 +78,8 @@ const actions = {
         this.$router.push('/')
       } else {
         // User is logged out
-        commit('setUserDetails', {})
         this.$router.replace('/auth')
+        commit('setUserDetails', {})
       }
     })
   }

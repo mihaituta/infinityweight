@@ -1,6 +1,7 @@
 import { route } from 'quasar/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
+import { fbAuth } from 'boot/firebase'
 
 /*
  * If not building with SSR mode, you can
@@ -12,6 +13,7 @@ import routes from './routes'
  */
 
 export default route(function (/* { store, ssrContext } */) {
+
   const createHistory = process.env.SERVER
     ? createMemoryHistory
     : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory)
@@ -26,5 +28,14 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.MODE === 'ssr' ? void 0 : process.env.VUE_ROUTER_BASE)
   })
 
+  //redirect to login page if user is unauthenticated
+  Router.beforeEach(async (to, from, next) => {
+    const auth = to.meta.requiresAuth
+    if (auth && !await fbAuth.getCurrentUser()) {
+      next('/auth');
+    } else {
+      next();
+    }
+  })
   return Router
 })

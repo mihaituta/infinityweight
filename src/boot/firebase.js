@@ -1,8 +1,13 @@
 // Import the functions you need from the SDKs you need
 import {initializeApp} from "firebase/app";
 import {getFirestore, collection, getDocs, addDoc, setDoc, getDoc, doc} from 'firebase/firestore'
-import {getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut} from "firebase/auth";
-
+import {
+  getAuth,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut
+} from "firebase/auth";
 
 // Initialize Firebase
 const firebaseApp = initializeApp({
@@ -16,6 +21,15 @@ const firebaseApp = initializeApp({
 
 const fbAuth = getAuth(firebaseApp)
 const fbDB = getFirestore(firebaseApp)
+
+fbAuth.getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(fbAuth, user => {
+      unsubscribe();
+      resolve(user);
+    }, reject);
+  })
+}
 
 export {
   fbAuth,

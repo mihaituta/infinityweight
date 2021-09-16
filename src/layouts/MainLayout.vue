@@ -1,39 +1,35 @@
 <template>
-  <q-layout view="lHh Lpr fFf" class="bg-primary">
+  <q-layout view="lHh Lpr fFf">
 
-    <q-header bordered class="bg-primary">
+    <q-header bordered dark>
       <q-toolbar>
-        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer"/>
 
-        <q-toolbar-title class="text-secondary">
-          <!--          <q-avatar>-->
-          <!--            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">-->
-          <!--          </q-avatar>-->
+        <q-toolbar-title class="text-secondary text-h5 q-ml-md">
           InfinityWeight
         </q-toolbar-title>
 
         <q-btn
-          v-if="userDetails.userId"
-          @click="logoutUser"
-          color="secondary"
-          icon="logout"
-          label="Logout"
-          dense
-          class="q-px-md q-py-sm"
-        >
-        </q-btn>
-
+          v-if="!drawer"
+          class="text-h5"
+          flat
+          round
+          icon="menu"
+          @click="toggleDrawer"
+        />
       </q-toolbar>
     </q-header>
 
     <q-drawer
+      dark
       show-if-above
-      v-model="leftDrawerOpen"
-      :width="300"
-      :breakpoint="400"
-      class="bg-dark"
+      v-model="drawer"
+      :breakpoint="1024"
+      bordered
     >
-      <q-scroll-area style="height: calc(100% - 150px); margin-top: 150px;">
+      <q-scroll-area
+        style="height: calc(100% - 200px); margin-top: 200px;"
+        class="q-px-lg q-py-lg relative-position text-h6"
+      >
         <q-list padding class="text-secondary">
           <q-item clickable v-ripple>
             <q-item-section avatar>
@@ -65,16 +61,34 @@
             </q-item-section>
           </q-item>
 
+          <q-space/>
+
+          <q-item
+            clickable
+            v-ripple
+            v-if="userDetails.userId"
+            @click="logoutUser"
+            class="absolute-bottom"
+          >
+            <q-item-section avatar>
+              <q-icon name="logout"/>
+            </q-item-section>
+
+            <q-item-section>
+              Logout
+            </q-item-section>
+          </q-item>
+
         </q-list>
       </q-scroll-area>
 
-      <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 150px">
-        <div class="absolute-bottom bg-transparent">
-          <q-avatar size="60px" class="q-mb-sm">
+      <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 200px">
+        <div class="q-mx-lg absolute-bottom bg-transparent">
+          <q-avatar size="100px" class="q-mb-sm">
             <img src="https://cdn.quasar.dev/img/boy-avatar.png">
           </q-avatar>
-          <div class="text-weight-bold">Mihai Tuta</div>
-          <div>@tutamihai</div>
+          <div v-if="userDetails.email">@{{ userDetails.email.split('@')[0] }}</div>
+          <div class="text-weight-bold text-h6">{{ userDetails.name }}</div>
         </div>
       </q-img>
     </q-drawer>
@@ -92,12 +106,12 @@ import {mapState, mapActions} from 'vuex'
 export default {
   data() {
     return {
-      leftDrawerOpen: false,
+      drawer: false,
     }
   },
   methods: {
-    toggleLeftDrawer() {
-      this.leftDrawerOpen = !this.leftDrawerOpen
+    toggleDrawer() {
+      this.drawer = !this.drawer
     },
     ...mapActions('myStore', ['logoutUser'])
   },
@@ -106,3 +120,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.q-item {
+  padding-bottom: 1.5rem;
+}
+</style>
