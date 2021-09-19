@@ -12,6 +12,8 @@ import {
   doc
 } from 'boot/firebase'
 
+import {Notify} from "quasar";
+
 const state = {
   userDetails: {}
 }
@@ -25,35 +27,90 @@ const mutations = {
 const actions = {
   registerUser({}, payload) {
     createUserWithEmailAndPassword(fbAuth, payload.email, payload.password)
-      .then(response => {
-        console.log(response)
-        const userId = fbAuth.currentUser.uid
-        try {
-          setDoc(doc(fbDB, "users", userId), {
-            name: payload.name,
-            email: payload.email,
+      .then((response) => {
+        if (response) {
+          const userId = fbAuth.currentUser.uid
+          try {
+            setDoc(doc(fbDB, "users", userId), {
+              name: payload.name,
+              email: payload.email,
+            })
+          } catch (e) {
+            console.error("Error adding document: ", e)
+          }
+          Notify.create({
+            progress: true,
+            type: 'positive',
+            color: 'positive',
+            timeout: 3000,
+            position: 'top',
+            message: 'User registered successfully!'
           })
-        } catch (e) {
-          console.error("Error adding document: ", e)
         }
       })
-      .catch(e => {
-        console.log(e)
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          Notify.create({
+            progress: true,
+            type: 'negative',
+            color: 'negative',
+            timeout: 2000,
+            position: 'top',
+            message: 'Email is unavailable!'
+          })
+        }
       });
   },
 
   loginUser({}, payload) {
     signInWithEmailAndPassword(fbAuth, payload.email, payload.password)
       .then(response => {
-        console.log(response)
+        if (response) {
+          Notify.create({
+            progress: true,
+            type: 'positive',
+            color: 'positive',
+            timeout: 2000,
+            position: 'top',
+            message: 'Login successfully!'
+          })
+        }
       })
-      .catch(e => {
-        console.log(e)
+      .catch(error => {
+        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+          Notify.create({
+            progress: true,
+            type: 'negative',
+            color: 'negative',
+            timeout: 2000,
+            position: 'top',
+            message: 'Invalid credentials!'
+          })
+        }
       })
   },
 
   logoutUser() {
-    signOut(fbAuth)
+    signOut(fbAuth).then(() => {
+      Notify.create({
+        progress: true,
+        type: 'positive',
+        color: 'positive',
+        timeout: 2000,
+        position: 'top',
+        message: 'Logout successfully!'
+      })
+    }).catch((error) => {
+      console.log(error.message)
+      Notify.create({
+        progress: true,
+        type: 'negative',
+        color: 'negative',
+        timeout: 2000,
+        position: 'top',
+        message: 'Something went wrong!'
+      })
+    });
   },
 
   handleAuthStateChanged({commit}) {
@@ -63,22 +120,18 @@ const actions = {
         try {
           const docSnap = await getDoc(doc(fbDB, "users", user.uid));
           const userDetails = docSnap.data()
-          if (docSnap.exists()) {
-            commit('setUserDetails', {
-              name: userDetails.name,
-              email: userDetails.email,
-              userId: user.uid
-            })
-          } else {
-
-          }
+          commit('setUserDetails', {
+            name: userDetails.name,
+            email: userDetails.email,
+            userId: user.uid
+          })
         } catch (e) {
           console.log(e)
         }
-        this.$router.push('/')
+        await this.$router.push('/')
       } else {
         // User is logged out
-        this.$router.replace('/auth')
+        await this.$router.replace('/auth')
         commit('setUserDetails', {})
       }
     })

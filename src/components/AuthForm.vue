@@ -82,8 +82,8 @@ export default {
       isPwd: true,
       formData: {
         name: '',
-        email: '',
-        password: ''
+        email: 'tutamihai@gmail.com',
+        password: '123123'
       }
     }
   },
@@ -100,7 +100,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .form-btn {
   font-size: 1.2rem;
 }
@@ -109,8 +109,10 @@ export default {
   font-size: 1.2rem;
 }
 
-.auth-form h1 {
-  font-size: 3rem;
+.auth-form {
+  h1 {
+    font-size: 3rem;
+  }
 }
 
 </style>

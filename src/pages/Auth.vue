@@ -46,7 +46,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .auth-tabs .q-tab__label {
   font-size: 1.2rem;
 }

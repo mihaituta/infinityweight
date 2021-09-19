@@ -9,8 +9,7 @@
         </q-toolbar-title>
 
         <q-btn
-          v-if="!drawer"
-          class="text-h5"
+          class="text-h5 lt-md"
           flat
           round
           icon="menu"
@@ -23,7 +22,7 @@
       dark
       show-if-above
       v-model="drawer"
-      :breakpoint="1024"
+      :breakpoint="1023"
       bordered
     >
       <q-scroll-area
