@@ -5,6 +5,9 @@ const routes = [
     meta: {requiresAuth: true},
     children: [
       {path: '/', component: () => import('pages/Index.vue')},
+      {path: '/calendar', component: () => import('pages/CalendarPage')},
+      {path: '/chart', component: () => import('pages/ChartPage')},
+      {path: '/history', component: () => import('pages/HistoryPage')},
     ]
   },
   {

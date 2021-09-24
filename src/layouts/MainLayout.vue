@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr fFf">
 
-    <q-header bordered dark>
+    <q-header bordered>
       <q-toolbar>
 
         <q-toolbar-title class="text-secondary text-h5 q-ml-md">
@@ -27,10 +27,32 @@
     >
       <q-scroll-area
         style="height: calc(100% - 200px); margin-top: 200px;"
-        class="q-px-lg q-py-lg relative-position text-h6"
+        class=" relative-position text-h6"
       >
-        <q-list padding class="text-secondary">
-          <q-item clickable v-ripple>
+        <q-list class="text-secondary no-padding">
+          <q-item
+            clickable
+            v-ripple
+            to="/"
+            exact
+            active-class="my-menu-link"
+          >
+            <q-item-section avatar>
+              <q-icon name="home"/>
+            </q-item-section>
+
+            <q-item-section>
+              Home
+            </q-item-section>
+          </q-item>
+
+          <q-item
+            clickable
+            v-ripple
+            to="/calendar"
+            exact
+            active-class="my-menu-link"
+          >
             <q-item-section avatar>
               <q-icon name="edit_calendar"/>
             </q-item-section>
@@ -40,23 +62,35 @@
             </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple>
+          <q-item
+            clickable
+            v-ripple
+            to="/chart"
+            exact
+            active-class="my-menu-link"
+          >
             <q-item-section avatar>
               <q-icon name="bar_chart"/>
             </q-item-section>
 
             <q-item-section>
-              Graph
+              Chart
             </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple>
+          <q-item
+            clickable
+            v-ripple
+            to="/history"
+            exact active
+            active-class="my-menu-link"
+          >
             <q-item-section avatar>
               <q-icon name="format_list_bulleted"/>
             </q-item-section>
 
             <q-item-section>
-              List
+              History
             </q-item-section>
           </q-item>
 
@@ -67,7 +101,7 @@
             v-ripple
             v-if="userDetails.userId"
             @click="logoutUser"
-            class="absolute-bottom"
+            class="absolute-bottom logout-btn"
           >
             <q-item-section avatar>
               <q-icon name="logout"/>
@@ -106,6 +140,7 @@ export default {
   data() {
     return {
       drawer: false,
+      link: '/'
     }
   },
   methods: {
@@ -116,12 +151,31 @@ export default {
   },
   computed: {
     ...mapState('myStore', ['userDetails'])
-  }
+  },
 }
 </script>
 
 <style lang="scss">
 .q-item {
-  padding-bottom: 1.5rem;
+  height: 4rem;
+  padding: 0 2rem 0 2rem;
+  &:hover{
+    color: $primary;
+    background: $secondary-300;
+  }
 }
+
+.q-layout {
+  background: $primary;
+}
+
+.q-header {
+  background: $primary-400;
+}
+
+.my-menu-link {
+  color: $primary;
+  background: $secondary;
+}
+
 </style>

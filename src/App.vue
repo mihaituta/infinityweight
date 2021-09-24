@@ -11,6 +11,6 @@ export default defineComponent({
   },
   mounted() {
     this.handleAuthStateChanged()
-  }
+  },
 })
 </script>

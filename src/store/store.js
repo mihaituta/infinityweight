@@ -6,21 +6,36 @@ import {
   onAuthStateChanged,
   signOut,
   collection,
+  query,
   addDoc,
   setDoc,
   getDoc,
-  doc
+  getDocs,
+  doc,
+  onSnapshot,
+  orderBy
 } from 'boot/firebase'
 
 import {Notify} from "quasar";
 
 const state = {
-  userDetails: {}
+  userDetails: {},
+  weightsData: []
 }
 
 const mutations = {
   setUserDetails(state, payload) {
     state.userDetails = payload
+  },
+  addWeight(state, weight) {
+    state.weightsData.unshift(weight)
+  },
+  updateWeight(state, weight) {
+    state.weightsData.splice(weight.weightId, 1)
+    state.weightsData.unshift(weight.weightObj)
+  },
+  deleteWeight(state, weight) {
+    state.weightsData.splice(weight, 1);
   }
 }
 
@@ -113,7 +128,7 @@ const actions = {
     });
   },
 
-  handleAuthStateChanged({commit}) {
+  handleAuthStateChanged({commit, dispatch}) {
     onAuthStateChanged(fbAuth, async user => {
       if (user) {
         // User is logged in
@@ -125,6 +140,7 @@ const actions = {
             email: userDetails.email,
             userId: user.uid
           })
+          dispatch('getWeights')
         } catch (e) {
           console.log(e)
         }
@@ -135,10 +151,46 @@ const actions = {
         commit('setUserDetails', {})
       }
     })
+  },
+
+  async getWeights({commit, state}) {
+    const weightsQuery = query(collection(fbDB, `users/${state.userDetails.userId}/weight`), orderBy('date'));
+    onSnapshot(weightsQuery, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        let weight = change.doc.data();
+
+        const date = new Date(weight.date.toDate());
+        const month = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.',
+          'Jul.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'][date.getMonth()];
+        const day = date.getDate()
+        const year = date.getFullYear()
+
+        let weightId = change.doc.id;
+        const weightObj = {
+          weightId,
+          weight: weight.weight,
+          weightDiff: weight.weightDiff,
+          status: weight.status,
+          date: {day, month, year}
+        }
+
+        if (change.type === 'added') {
+          commit('addWeight', weightObj)
+        }
+        if (change.type === 'modified') {
+          commit('updateWeight', {weightObj, weightId});
+        }
+        if (change.type === 'removed') {
+          commit('deleteWeight', weightId);
+        }
+      });
+    });
   }
 }
 
-const getters = {}
+const getters = {
+  weights: state => state.weightsData
+}
 
 export default {
   namespaced: true,
