@@ -12,6 +12,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+  .q-date{
+    width: auto;
+  }
 </style>

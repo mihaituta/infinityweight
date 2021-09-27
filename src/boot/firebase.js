@@ -1,6 +1,19 @@
 // Import the functions you need from the SDKs you need
 import {initializeApp} from "firebase/app";
-import {getFirestore, collection, getDocs, addDoc, setDoc, getDoc, doc, query, onSnapshot,orderBy} from 'firebase/firestore'
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  setDoc,
+  updateDoc,
+  getDoc,
+  deleteDoc,
+  doc,
+  query,
+  onSnapshot,
+  orderBy,
+  runTransaction
+} from 'firebase/firestore'
 import {
   getAuth,
   onAuthStateChanged,
@@ -10,7 +23,7 @@ import {
 } from "firebase/auth";
 
 // Initialize Firebase
-const firebaseApp = initializeApp({
+const fbApp = initializeApp({
   apiKey: "AIzaSyAAadtu6R14A7QVs-lyYNWDwCshioOdnD0",
   authDomain: "infinityweight-35abe.firebaseapp.com",
   projectId: "infinityweight-35abe",
@@ -19,8 +32,8 @@ const firebaseApp = initializeApp({
   appId: "1:708464725936:web:79c6f4857bdbee03281075"
 })
 
-const fbAuth = getAuth(firebaseApp)
-const fbDB = getFirestore(firebaseApp)
+const fbAuth = getAuth(fbApp)
+const fbDB = getFirestore(fbApp)
 
 fbAuth.getCurrentUser = () => {
   return new Promise((resolve, reject) => {
@@ -34,17 +47,20 @@ fbAuth.getCurrentUser = () => {
 export {
   fbAuth,
   fbDB,
+  fbApp,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
   addDoc,
   setDoc,
+  updateDoc,
   getDoc,
-  getDocs,
+  deleteDoc,
   doc,
   collection,
   query,
   onSnapshot,
-  orderBy
+  orderBy,
+  runTransaction
 }
