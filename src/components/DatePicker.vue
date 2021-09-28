@@ -24,10 +24,16 @@ import {date} from "quasar";
 
 export default {
   name: "DatePicker",
+  props: ['action', 'date'],
   data() {
     return {
-      dateNow: date.formatDate(Date.now(), 'DD-MM-YYYY'),
-      proxyDate: date.formatDate(Date.now(), 'DD-MM-YYYY')
+      dateNow: this.action.toLowerCase() === 'add'
+        ? date.formatDate(Date.now(), 'DD-MM-YYYY')
+        : date.formatDate(this.date, 'DD-MM-YYYY'),
+
+      proxyDate: this.action.toLowerCase() === 'add'
+        ? date.formatDate(Date.now(), 'DD-MM-YYYY')
+        : date.formatDate(this.date, 'DD-MM-YYYY'),
     }
   },
   methods: {
@@ -36,8 +42,6 @@ export default {
     },
     saveDate() {
       this.dateNow = this.proxyDate
-      // const dateToISO = date.extractDate(this.dateNow, 'DD-MM-YYYY').toISOString()
-      // const dateToISO = date.extractDate(this.dateNow, 'DD-MM-YYYY').toISOString().substr(0,10)
       this.$emit('setDate', this.dateNow)
     },
     dateOptions(targetDate) {

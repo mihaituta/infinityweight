@@ -1,5 +1,5 @@
 <template>
-  <q-list class="q-px-md q-pt-md" dark style="max-width: 40rem">
+  <q-list class="q-px-md q-pt-md" style="max-width: 40rem">
     <q-item-label class="q-pa-none text-h5" header>
       History
     </q-item-label>
@@ -9,13 +9,14 @@
       :key="weight"
       class="no-padding q-mt-md"
       clickable
-      v-ripple>
-      <q-item-section class="bg-secondary q-px-sm text-center item-date text-weight-bold">
+      @click="onClick(weight)"
+    >
+      <q-item-section class="q-px-sm text-center text-white item-date text-weight-bold">
         <q-item-label>{{ weight.date.getDate() }} {{ months[weight.date.getMonth()] }}</q-item-label>
         <q-item-label>{{ weight.date.getFullYear() }}</q-item-label>
       </q-item-section>
 
-      <q-item-section class="q-pl-sm item-weight">
+      <q-item-section class="q-pl-sm text-white item-weight">
         <q-item-label>{{ weight.weight }} <span>kg</span></q-item-label>
       </q-item-section>
 
@@ -38,6 +39,11 @@
     </q-item>
 
   </q-list>
+  <actions-modal
+    @closeUpdateModal="closeUpdateModal($event)"
+    action="update"
+    :weightData="updateWeightData"
+    :open="openUpdateModal"/>
   <actions-modal action="add"/>
 </template>
 
@@ -49,7 +55,18 @@ export default {
   data() {
     return {
       months: ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.',
-        'Jul.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.']
+        'Jul.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'],
+      openUpdateModal: false,
+      updateWeightData: {}
+    }
+  },
+  methods: {
+    onClick(weight) {
+      this.updateWeightData = weight
+      this.openUpdateModal = true
+    },
+    closeUpdateModal() {
+      this.openUpdateModal = false
     }
   },
   computed: {
@@ -71,6 +88,8 @@ export default {
     .item-date {
       max-width: 5rem;
       font-size: 1rem;
+      background: $secondary;
+
     }
 
     .item-weight {
@@ -87,6 +106,10 @@ export default {
       span {
         font-size: 1rem;
       }
+    }
+
+    &:hover {
+      background: $primary-200;
     }
   }
 }

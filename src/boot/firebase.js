@@ -12,7 +12,8 @@ import {
   query,
   onSnapshot,
   orderBy,
-  runTransaction
+  runTransaction,
+  writeBatch
 } from 'firebase/firestore'
 import {
   getAuth,
@@ -62,5 +63,6 @@ export {
   query,
   onSnapshot,
   orderBy,
-  runTransaction
+  runTransaction,
+  writeBatch
 }
