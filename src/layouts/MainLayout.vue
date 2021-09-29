@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr fFf">
 
-    <q-header bordered>
+    <q-header elevated>
       <q-toolbar>
 
         <q-toolbar-title class="text-secondary text-h5 q-ml-md">

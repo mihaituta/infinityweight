@@ -7,7 +7,7 @@
     <q-item
       v-for="weight in weights"
       :key="weight"
-      class="no-padding q-mt-md"
+      class="no-padding q-mt-md shadow-5"
       clickable
       @click="onClick(weight)"
     >
@@ -26,11 +26,13 @@
           <q-icon v-else-if="weight.weightDiff < 0" size="1.5rem" name="south" color="secondary"></q-icon>
 
           <q-item-label v-if="weight.weightDiff > 0" class="q-pl-xs text-negative">
-            {{ weight.weightDiff }}
+            <!-- turn the string into a number to get rid of the zero after coma Ex: 35.0 -> 35 -->
+            {{ +weight.weightDiff }}
             <span>kg</span></q-item-label>
           <q-item-label v-else-if="weight.weightDiff < 0" class="q-pl-xs text-secondary">
-            <!-- turn the number positive and get rid of '-' when it is displayed -->
-            {{ weight.weightDiff * -1 }}
+            <!-- turn the string into a positive number (weight loss is a negative number in database)
+             and get rid of '-' when it is displayed -->
+            {{ -weight.weightDiff }}
             <span>kg</span></q-item-label>
           <q-item-label v-else class="q-pl-xs same"> 0 <span>kg</span></q-item-label>
 

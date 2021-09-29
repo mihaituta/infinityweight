@@ -64,9 +64,8 @@
 
     <q-btn
       :label="tab"
-      dark
       type="submit"
-      class="form-btn bg-secondary text-primary q-px-xl q-py-sm text-weight-bold full-width"
+      class="form-btn bg-secondary q-px-xl q-py-sm text-weight-bold full-width"
     />
 
   </q-form>

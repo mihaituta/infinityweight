@@ -24,12 +24,16 @@ import {date, Notify} from "quasar";
 
 const state = {
   userDetails: {},
-  weightsData: []
+  weightsData: [],
+  weightsListener: null
 }
 
 const mutations = {
   setUserDetails(state, payload) {
     state.userDetails = payload
+  },
+  setWeightsListener(state, payload) {
+    state.weightsListener = payload
   },
   addWeight(state, weight) {
     state.weightsData.unshift(weight)
@@ -43,8 +47,8 @@ const mutations = {
     state.weightsData = state.weightsData.sort((a, b) => b.date - a.date)
   },
   deleteWeight(state, weightId) {
-    const currentWeightIndex = state.weightsData.findIndex(item => item.id === weightId);
-    state.weightsData.splice(currentWeightIndex, 1)
+    const selectedWeightIndex = state.weightsData.findIndex(item => item.id === weightId);
+    state.weightsData.splice(selectedWeightIndex, 1)
   },
   clearData(state) {
     state.userDetails = null;
@@ -118,8 +122,11 @@ const actions = {
       })
   },
 
-  logoutUser() {
-    signOut(fbAuth).then(() => {
+  async logoutUser({state}) {
+    // this unsubscribes from the listener so it doesn't throw error because of firebase rules trying to listen for changes when there is no user authenticated
+    state.weightsListener()
+
+    await signOut(fbAuth).then(() => {
       Notify.create({
         progress: true,
         type: 'positive',
@@ -168,7 +175,7 @@ const actions = {
 
   async getWeights({commit, state}) {
     const weightsQuery = query(collection(fbDB, `users/${state.userDetails.userId}/weights`), orderBy('date'));
-    onSnapshot(weightsQuery, (snapshot) => {
+    const weightsListener = onSnapshot(weightsQuery, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         let weight = change.doc.data()
         const id = change.doc.id
@@ -190,13 +197,14 @@ const actions = {
         }
       });
     });
+    commit('setWeightsListener', weightsListener)
   },
 
-  async deleteWeight({state}, payload) {
-    const currentWeightIndex = state.weightsData.findIndex(item => item.id === payload.id);
+  async deleteWeight({state, commit}, payload) {
+    const selectedWeightIndex = state.weightsData.findIndex(item => item.id === payload.id);
 
-    const nextDayWeightIndex = currentWeightIndex - 1
-    const prevDayWeightIndex = currentWeightIndex + 1
+    const nextDayWeightIndex = selectedWeightIndex - 1
+    const prevDayWeightIndex = selectedWeightIndex + 1
 
     const nextDayWeight = state.weightsData[nextDayWeightIndex]
     const prevDayWeight = state.weightsData[prevDayWeightIndex]
@@ -206,19 +214,21 @@ const actions = {
 
     // if the user only has one weight there's no need to re-calculate any difference
     if (state.weightsData.length !== 1) {
-      // if the selected weight is not the first or last calculate the difference between the previous and the next weight
-      if (currentWeightIndex !== 0 && currentWeightIndex !== state.weightsData.length - 1) {
+      // if the selected weight is not the most recent or oldest calculate the difference between the previous day and the next day weight
+      if (selectedWeightIndex !== 0 && selectedWeightIndex !== state.weightsData.length - 1) {
         weightDiff = (parseFloat(nextDayWeight.weight) - parseFloat(prevDayWeight.weight)).toFixed(1)
         canUpdate = true
       }
-      // if the selected weight is the last, the previous one's diff should be 0 since there's nothing before it to compare
-      else if (currentWeightIndex === state.weightsData.length - 1) {
+      /* if the selected weight is the oldest (first ever added),
+      the next day's difference should be 0 since there's nothing before it to compare */
+      else if (selectedWeightIndex === state.weightsData.length - 1) {
         weightDiff = 0
         canUpdate = true
       }
     }
 
     const weightDoc = doc(fbDB, `users/${state.userDetails.userId}/weights`, payload.id)
+
     try {
       await deleteDoc(weightDoc)
       if (canUpdate) {
@@ -241,97 +251,52 @@ const actions = {
   },
 
   async updateWeight({state}, payload) {
-    /* const weightDoc = doc(fbDB, `users/${state.userDetails.userId}/weights`, payload.id)
+    const selectedWeightIndex = state.weightsData.findIndex(item => item.id === payload.id);
+    const nextDayWeightIndex = selectedWeightIndex - 1
+    const prevDayWeightIndex = selectedWeightIndex + 1
 
-     const currentWeightIndex = state.weightsData.findIndex(item => item.id === payload.id);
-     const nextDayWeightIndex = currentWeightIndex - 1
-     const prevDayWeightIndex = currentWeightIndex + 1
+    const nextDayWeight = state.weightsData[nextDayWeightIndex]
+    const prevDayWeight = state.weightsData[prevDayWeightIndex]
 
-     const currentWeightInState = state.weightsData[currentWeightIndex]
-     const nextDayWeight = state.weightsData[nextDayWeightIndex]
-     const prevDayWeight = state.weightsData[prevDayWeightIndex]
+    let selectedWeightDiff = 0, nextDayWeightDiff = 0
 
-     let currentWeightDiff = 0, nextDayWeightDiff = 0
+    let canUpdateNextDayWeight = true
 
-     let canUpdateNextDayWeight = true
-
-     // if the user only has one weight there's no need to re-calculate any difference
-     if (state.weightsData.length !== 1) {
-       // if selected weight is first only update current weight difference
-       if (currentWeightIndex === 0) {
-         currentWeightDiff = (payload.weight - prevDayWeight.weight).toFixed(1)
-         canUpdateNextDayWeight = false
-       }
-       // if selected weight is last only update nextDay's weight difference
-       else if (currentWeightIndex === state.weightsData.length - 1) {
-         nextDayWeightDiff = (nextDayWeight.weight - payload.weight).toFixed(1)
-       }
-       // if selected weight is neither first or last, update both
-       else {
-         currentWeightDiff = (payload.weight - prevDayWeight.weight).toFixed(1)
-         nextDayWeightDiff = (nextDayWeight.weight - payload.weight).toFixed(1)
-       }
-     }
-
-     try {
-       await updateDoc(weightDoc, {
-         weight: payload.weight,
-         date: payload.date.toISOString(),
-         weightDiff: currentWeightDiff
-       })
-       if (currentWeightIndex !== 0 && canUpdateNextDayWeight) {
-         const nextDayWeightDoc = doc(fbDB, `users/${state.userDetails.userId}/weights`, nextDayWeight.id)
-         await updateDoc(nextDayWeightDoc, {
-           weightDiff: nextDayWeightDiff
-         })
-       }
-
-       /!* await setDoc(weightDoc, {
-          weight: payload.weight,
-          date: payload.date.toISOString(),
-          weightDiff: 0.5
-        })*!/
-
-       Notify.create({
-         progress: true,
-         type: 'positive',
-         color: 'secondary',
-         timeout: 2000,
-         position: 'top',
-         message: 'Weight updated successfully!'
-       })*/
-    const toDeleteDoc = doc(fbDB, `users/${state.userDetails.userId}/weights`, payload.id)
-
-    let weightDiff = 0
-    state.weightsData.some(weightInState => {
-      if (payload.date > weightInState.date) {
-        weightDiff = (-weightInState.weight + payload.weight).toFixed(1)
-        return true
+    // if the user only has one weight there's no need to re-calculate any difference
+    if (state.weightsData.length !== 1) {
+      // if selected weight is the most recent (first in array), only update it's weight difference since there is no next day
+      if (selectedWeightIndex === 0) {
+        selectedWeightDiff = (payload.weight - prevDayWeight.weight).toFixed(1)
+        canUpdateNextDayWeight = false
       }
-    })
+      /* if selected weight is the first ever added (oldest date) (last in array)
+       don't update selected weight difference since there is nothing before it to compare to
+       only update next day's weight difference */
+      else if (selectedWeightIndex === state.weightsData.length - 1) {
+        nextDayWeightDiff = (nextDayWeight.weight - payload.weight).toFixed(1)
+      }
+      // if selected weight is neither first or last, update both the selected and the next day's weight
+      else {
+        selectedWeightDiff = (payload.weight - prevDayWeight.weight).toFixed(1)
+        nextDayWeightDiff = (nextDayWeight.weight - payload.weight).toFixed(1)
+      }
+    }
 
-    // set the weight id as the current date
-    const weightId = date.formatDate(payload.date, 'DD-MM-YYYY')
-    const weightDoc = doc(fbDB, `users/${state.userDetails.userId}/weights`, weightId)
+    const weightDoc = doc(fbDB, `users/${state.userDetails.userId}/weights`, payload.id)
 
     try {
-      const batch = writeBatch(fbDB);
-      batch.delete(toDeleteDoc)
-      batch.set(weightDoc, {
+      await updateDoc(weightDoc, {
         weight: payload.weight,
-        date: payload.date.toISOString(),
-        weightDiff
+        weightDiff: selectedWeightDiff
       })
-
-      // recalculate the next day's weight difference when a weight is added before it
-      const currentWeightIndex = state.weightsData.findIndex(item => item.id === weightId);
-      if (currentWeightIndex > 0) {
-        const nextDayWeight = state.weightsData[currentWeightIndex - 1]
+      // only update next day difference if selected is not the most recent, since there is no next day
+      if (selectedWeightIndex !== 0 && canUpdateNextDayWeight) {
         const nextDayWeightDoc = doc(fbDB, `users/${state.userDetails.userId}/weights`, nextDayWeight.id)
-        batch.update(nextDayWeightDoc, {
-          weightDiff: (nextDayWeight.weight - payload.weight).toFixed(1)
-        });
+        await updateDoc(nextDayWeightDoc, {
+          weightDiff: nextDayWeightDiff
+        })
       }
+
       Notify.create({
         progress: true,
         type: 'positive',
@@ -340,36 +305,9 @@ const actions = {
         position: 'top',
         message: 'Weight updated successfully!'
       })
-      await batch.commit();
     } catch (err) {
       console.log(err)
     }
-
-
-    /*    try {
-          await runTransaction(fbDB, async (transaction) => {
-            await transaction.delete(weightDoc)
-            await transaction.set(weightDoc, {
-              weight: payload.weight,
-              date: payload.date.toISOString(),
-              weightDiff
-            })
-
-            Notify.create({
-              progress: true,
-              type: 'positive',
-              color: 'secondary',
-              timeout: 2000,
-              position: 'top',
-              message: 'Weight updated successfully!'
-            })
-          });
-          // console.log("Transaction successfully committed!");
-
-        } catch (err) {
-          console.log(err)
-        }*/
-
   },
 
   async addWeight({state}, payload) {
@@ -407,9 +345,9 @@ const actions = {
         })
 
         // recalculate the next day's weight difference when a weight is added before it
-        const currentWeightIndex = state.weightsData.findIndex(item => item.id === weightId);
-        if (currentWeightIndex > 0) {
-          const nextDayWeight = state.weightsData[currentWeightIndex - 1]
+        const addedWeightIndex = state.weightsData.findIndex(item => item.id === weightId);
+        if (addedWeightIndex > 0) {
+          const nextDayWeight = state.weightsData[addedWeightIndex - 1]
           const nextDayWeightDoc = doc(fbDB, `users/${state.userDetails.userId}/weights`, nextDayWeight.id)
           await updateDoc(nextDayWeightDoc, {
             weightDiff: (nextDayWeight.weight - payload.weight).toFixed(1)

@@ -2,7 +2,7 @@
   <q-btn
     v-if="action.toLowerCase() === 'add'"
     round
-    class="fixed-bottom-right q-mr-md q-mb-md"
+    class="fixed-bottom-right shadow-10 q-mr-md q-mb-md"
     color="secondary"
     size="lg"
     push
@@ -18,23 +18,26 @@
       <q-form
         @submit="onSubmit"
       >
-        <q-card-section class="row items-center q-px-none q-pb-none">
-          <div v-if="action.toLowerCase() === 'add'" class="text-h6 text-capitalize">{{ action }} weight</div>
-          <date-picker
-            @setDate="setDate($event)"
-            action='update'
-            :date="this.date"
+        <q-card-section class="row q-px-none q-mb-sm">
+          <div v-if="action.toLowerCase() === 'add'" class="text-h6 text-capitalize text-secondary">
+            {{ action }} weight
+          </div>
+          <div
             v-else-if="action.toLowerCase() === 'update'"
-          />
+            class="updateDateDisplay flex items-center"
+          >
+            <q-icon name="event" size="sm" class="q-pr-sm"/>
+            {{ this.updateDate }}
+          </div>
           <q-space/>
           <q-btn icon="close" flat round dense v-close-popup/>
         </q-card-section>
 
-        <q-card-section class="q-pa-none q-my-lg">
+        <q-card-section class="q-pa-none q-my-sm">
           <q-input
             dark
             filled
-            class="form-input"
+            class="weightInput"
             color="secondary"
             v-model="weight"
             placeholder="Weight"
@@ -51,22 +54,21 @@
           <date-picker
             @setDate="setDate($event)"
             action='add'
-            :date="this.date"
             v-if="action.toLowerCase() === 'add'"
           />
 
           <q-btn
             v-else-if="action.toLowerCase() === 'update'"
+            class="deleteBtn"
             color="negative"
+            icon="delete"
             label="Delete"
             v-on:click="onDelete"
             v-close-popup
           />
-
           <q-space/>
-
-          <q-btn color="negative" label="Close" v-close-popup/>
-          <q-btn color="secondary" type="submit" :label="action"/>
+          <q-btn class="actionModalBtns" color="negative" label="Close" v-close-popup/>
+          <q-btn class="actionModalBtns" color="secondary" type="submit" :label="action"/>
         </q-card-actions>
       </q-form>
     </q-card>
@@ -88,7 +90,8 @@ export default {
       openModal: false,
       dateModal: false,
       weight: '',
-      date: new Date()
+      date: new Date(),
+      updateDate: ''
     }
   },
   methods: {
@@ -104,7 +107,7 @@ export default {
         this.date = new Date()
       } else {
         this.weight = ''
-        this.date = ''
+        // this.date = ''
       }
     },
 
@@ -148,7 +151,7 @@ export default {
         } else {
           this.weight = ''
         }
-        this.date = this.weightData.date
+        this.updateDate = date.formatDate(this.weightData.date, 'DD-MM-YYYY')
       }
     },
 
@@ -203,13 +206,40 @@ export default {
       // 2nd replace = can only have 1 dot, max 4 chars, only 1 decimal
       this.weight = this.weight.replace(/[^0-9.]|^0|^\./g, '').replace(/(\.){2,}|(\d{4}).|(\.\d)./g, '$1 $2 $3')
     },
-    open: function () {
+    open() {
       this.openModal = this.open;
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+.updateDateDisplay {
+  font-size: 1.2rem;
+  color: $secondary;
+}
+
+.actionModalBtns {
+  height: 2rem;
+  width: 4.5rem;
+}
+
+.weightInput {
+  font-size: 1.1rem;
+}
+
+.deleteBtn {
+  height: 2rem;
+  padding-right: 1rem;
+  .q-icon {
+    font-size: 1.2rem;
+  }
+  .on-left {
+    margin-right: 0.5rem;
+  }
+  .block{
+    padding-right: 0.3rem;
+  }
+}
 
 </style>

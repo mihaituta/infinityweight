@@ -24,16 +24,11 @@ import {date} from "quasar";
 
 export default {
   name: "DatePicker",
-  props: ['action', 'date'],
+  props: ['action'],
   data() {
     return {
-      dateNow: this.action.toLowerCase() === 'add'
-        ? date.formatDate(Date.now(), 'DD-MM-YYYY')
-        : date.formatDate(this.date, 'DD-MM-YYYY'),
-
-      proxyDate: this.action.toLowerCase() === 'add'
-        ? date.formatDate(Date.now(), 'DD-MM-YYYY')
-        : date.formatDate(this.date, 'DD-MM-YYYY'),
+      dateNow: date.formatDate(Date.now(), 'DD-MM-YYYY'),
+      proxyDate: date.formatDate(Date.now(), 'DD-MM-YYYY')
     }
   },
   methods: {
@@ -44,16 +39,22 @@ export default {
       this.dateNow = this.proxyDate
       this.$emit('setDate', this.dateNow)
     },
+    // restrict user to not log weight in future dates (only <= 'today')
     dateOptions(targetDate) {
-      // restrict user to not log weight in future dates (only <= 'today')
       return targetDate <= date.formatDate(Date.now(), 'YYYY/MM/DD')
     },
   }
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .dateBtn {
-  font-size: 1.1rem;
+  font-size: 1.22rem;
+  .q-icon{
+    font-size: 1.5rem;
+  }
+  .on-left{
+    margin-right: 0.5rem;
+  }
 }
 </style>
