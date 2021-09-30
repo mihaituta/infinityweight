@@ -4,7 +4,7 @@
     <q-header elevated>
       <q-toolbar>
 
-        <q-toolbar-title class="text-secondary text-h5 q-ml-md">
+        <q-toolbar-title class="text-secondary text-h5 q-ml-md text-weight-bold">
           InfinityWeight
         </q-toolbar-title>
 
@@ -27,7 +27,7 @@
     >
       <q-scroll-area
         style="height: calc(100% - 200px); margin-top: 200px;"
-        class=" relative-position text-h6"
+        class="relative-position text-h6 text-weight-bold"
       >
         <q-list class="text-secondary no-padding">
           <q-item

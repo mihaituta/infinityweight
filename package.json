@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "apexcharts": "^3.28.3",
     "core-js": "^3.6.5",
     "firebase": "^9.0.2",
     "quasar": "^2.0.0",
+    "vue3-apexcharts": "^1.4.1",
     "vuex": "^4.0.1"
   },
   "devDependencies": {

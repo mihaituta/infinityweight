@@ -113,7 +113,7 @@ export default {
 
     // called from DatePicker to send the selected date from the calendar
     setDate(selectedDate) {
-      this.date = date.extractDate(selectedDate, 'DD-MM-YYYY')
+      this.date = date.extractDate(selectedDate, 'DD MMM YYYY')
     },
 
     closeModal() {
@@ -122,11 +122,13 @@ export default {
 
     onSubmit() {
       // this.weight = Math.floor(parseFloat(this.weight) * 10) / 10
+
       const weightChanged = {
         id: this.action.toLowerCase() === 'update' ? this.weightData.id : null,
         weight: parseFloat(this.weight),
         date: this.date
       }
+
       if (this.action.toLowerCase() === 'add') {
         this.addWeight(weightChanged)
       } else {
@@ -151,7 +153,7 @@ export default {
         } else {
           this.weight = ''
         }
-        this.updateDate = date.formatDate(this.weightData.date, 'DD-MM-YYYY')
+        this.updateDate = date.formatDate(this.weightData.date, 'DD MMM YYYY')
       }
     },
 
@@ -217,10 +219,14 @@ export default {
 .updateDateDisplay {
   font-size: 1.2rem;
   color: $secondary;
+
+  .q-icon {
+    padding-bottom: 0.1rem;
+    padding-right: 0.3rem;
+  }
 }
 
 .actionModalBtns {
-  height: 2rem;
   width: 4.5rem;
 }
 
@@ -229,15 +235,18 @@ export default {
 }
 
 .deleteBtn {
-  height: 2rem;
+
   padding-right: 1rem;
+
   .q-icon {
     font-size: 1.2rem;
   }
+
   .on-left {
     margin-right: 0.5rem;
   }
-  .block{
+
+  .block {
     padding-right: 0.3rem;
   }
 }

@@ -1,12 +1,12 @@
 <template>
-  <q-btn class="dateBtn" padding="none" icon="event" flat color="secondary" :label="dateNow">
+  <q-btn class="dateBtn text-capitalize" padding="none" icon="event" flat color="secondary" :label="dateNow">
     <q-popup-proxy @before-show="updateProxy" transition-show="scale" transition-hide="scale">
       <q-date
         today-btn
         dark
         no-unset
         color="secondary"
-        mask="DD-MM-YYYY"
+        mask="DD MMM YYYY"
         :options="dateOptions"
         v-model="proxyDate"
       >
@@ -27,8 +27,8 @@ export default {
   props: ['action'],
   data() {
     return {
-      dateNow: date.formatDate(Date.now(), 'DD-MM-YYYY'),
-      proxyDate: date.formatDate(Date.now(), 'DD-MM-YYYY')
+      dateNow: date.formatDate(Date.now(), 'DD MMM YYYY'),
+      proxyDate: date.formatDate(Date.now(), 'DD MMM YYYY')
     }
   },
   methods: {
@@ -48,13 +48,17 @@ export default {
 </script>
 
 <style lang="scss">
+
 .dateBtn {
-  font-size: 1.22rem;
-  .q-icon{
-    font-size: 1.5rem;
+  font-size: 1.1rem;
+  line-height: normal;
+
+  .q-icon {
+    font-size: 1.4rem;
   }
-  .on-left{
-    margin-right: 0.5rem;
+
+  .on-left {
+    margin-right: 0.2rem;
   }
 }
 </style>

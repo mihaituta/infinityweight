@@ -56,8 +56,8 @@ export default {
   name: "HistoryPage",
   data() {
     return {
-      months: ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.',
-        'Jul.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'],
+      months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
       openUpdateModal: false,
       updateWeightData: {}
     }

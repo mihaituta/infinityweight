@@ -1,19 +1,13 @@
 <template>
-  <q-date
-    v-model="date"
-    dark
-    bordered
-  />
+ <div>calendar view</div>
 </template>
 
 <script>
 export default {
-  name: "CalendarPage"
+  name: "CalendarPage",
 }
 </script>
 
-<style scoped lang="scss">
-  .q-date{
-    width: auto;
-  }
+<style lang="scss">
+
 </style>

@@ -321,7 +321,7 @@ const actions = {
     })
 
     // set the weight id as the current date
-    const weightId = date.formatDate(payload.date, 'DD-MM-YYYY')
+    const weightId = date.formatDate(payload.date, 'DD MMM YYYY')
     const weightDoc = doc(fbDB, `users/${state.userDetails.userId}/weights`, weightId)
     try {
       // check if weight already exists in db
