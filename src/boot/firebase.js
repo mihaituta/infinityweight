@@ -7,13 +7,16 @@ import {
   setDoc,
   updateDoc,
   getDoc,
+  getDocs,
   deleteDoc,
   doc,
   query,
   onSnapshot,
   orderBy,
   runTransaction,
-  writeBatch
+  writeBatch,
+  limit,
+  where
 } from 'firebase/firestore'
 import {
   getAuth,
@@ -57,6 +60,7 @@ export {
   setDoc,
   updateDoc,
   getDoc,
+  getDocs,
   deleteDoc,
   doc,
   collection,
@@ -64,5 +68,7 @@ export {
   onSnapshot,
   orderBy,
   runTransaction,
-  writeBatch
+  writeBatch,
+  limit,
+  where
 }

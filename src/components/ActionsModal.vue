@@ -95,7 +95,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('myStore', ['addWeight', 'updateWeight', 'deleteWeight']),
+    ...mapActions('myStore', ['addWeight', 'updateWeight', 'deleteWeight', 'populateDb']),
 
     resetFields() {
       if (this.action.toLowerCase() === 'add') {
@@ -122,7 +122,6 @@ export default {
 
     onSubmit() {
       // this.weight = Math.floor(parseFloat(this.weight) * 10) / 10
-
       const weightChanged = {
         id: this.action.toLowerCase() === 'update' ? this.weightData.id : null,
         weight: parseFloat(this.weight),
@@ -131,6 +130,7 @@ export default {
 
       if (this.action.toLowerCase() === 'add') {
         this.addWeight(weightChanged)
+        // this.populateDb()
       } else {
         // if weight data is unchanged, no update is required
         if (this.weightData.id === weightChanged.id && this.weightData.date === this.date && this.weightData.weight === this.weight) {
