@@ -41,7 +41,7 @@ export default {
         name: 'weights',
         data: []
       }],
-      height: 660,
+      height: 650,
       options: {
         noData: {
           text: 'No data'
@@ -56,7 +56,7 @@ export default {
         },
         colors: ['#41B983FF'],
         title: {
-          text: 'Weight',
+          text: 'Weight chart',
           align: 'center',
           style: {
             color: '#41B983FF',
@@ -154,7 +154,7 @@ export default {
           },
         },
         responsive: [{
-          breakpoint: 768,
+          breakpoint: 599,
           options: {
             title: {
               style: {
@@ -848,19 +848,27 @@ export default {
 }
 
 @media (min-width: $breakpoint-sm-min) {
-  .toggle-btns-wrapper {
-    padding-right: 1rem;
-    justify-content: end;
+  .chart-card {
+    margin: 2rem 2rem 0 2rem;
 
-    .q-btn {
-      font-size: 0.9rem;
+    .toggle-btns-wrapper {
+      padding-right: 0.5rem;
+      justify-content: end;
+
+      .q-btn {
+        font-size: 0.79rem;
+      }
     }
   }
 }
 
 @media (min-width: $breakpoint-md-min) {
   .chart-card {
-    margin: 2rem 2rem 0 2rem;
+    .toggle-btns-wrapper {
+      .q-btn {
+        font-size: 0.9rem;
+      }
+    }
   }
 }
 

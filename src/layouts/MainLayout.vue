@@ -1,15 +1,15 @@
 <template>
   <q-layout view="lHh Lpr fFf">
-
-    <q-header elevated>
+    <q-header class="q-py-sm" elevated>
       <q-toolbar>
 
         <q-toolbar-title class="text-secondary text-h5 q-ml-md text-weight-bold">
           InfinityWeight
         </q-toolbar-title>
 
+        <div class="text-secondary text-h5 text-weight-bold gt-xs lt-md"> {{ pageTitle }}</div>
         <q-btn
-          class="text-h5 lt-md"
+          class="text-h5 lt-md text-secondary"
           flat
           round
           icon="menu"
@@ -36,6 +36,7 @@
             to="/"
             exact
             active-class="my-menu-link"
+            @click="setPageTitle('')"
           >
             <q-item-section avatar>
               <q-icon name="home"/>
@@ -52,6 +53,7 @@
             to="/calendar"
             exact
             active-class="my-menu-link"
+            @click="setPageTitle('Calendar')"
           >
             <q-item-section avatar>
               <q-icon name="edit_calendar"/>
@@ -68,6 +70,7 @@
             to="/chart"
             exact
             active-class="my-menu-link"
+            @click="setPageTitle('Chart')"
           >
             <q-item-section avatar>
               <q-icon name="bar_chart"/>
@@ -84,6 +87,7 @@
             to="/history"
             exact active
             active-class="my-menu-link"
+            @click="setPageTitle('History')"
           >
             <q-item-section avatar>
               <q-icon name="format_list_bulleted"/>
@@ -140,6 +144,7 @@ export default {
   data() {
     return {
       drawer: false,
+      pageTitle: '',
       link: '/'
     }
   },
@@ -147,10 +152,13 @@ export default {
     toggleDrawer() {
       this.drawer = !this.drawer
     },
+    setPageTitle(title) {
+      this.pageTitle = title
+    },
     ...mapActions('myStore', ['logoutUser'])
   },
   computed: {
-    ...mapState('myStore', ['userDetails'])
+    ...mapState('myStore', ['userDetails']),
   },
 }
 </script>

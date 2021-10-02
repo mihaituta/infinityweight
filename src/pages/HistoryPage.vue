@@ -1,8 +1,15 @@
 <template>
-  <q-list class="q-px-md q-pt-md" style="max-width: 40rem">
-    <q-item-label class="q-pa-none text-h5" header>
+  <q-list class="q-px-md q-pt-md">
+    <q-item-label class="history-title q-pa-none text-secondary lt-sm" header>
       History
     </q-item-label>
+
+    <actions-modal
+      @closeUpdateModal="closeUpdateModal($event)"
+      action="update"
+      :weightData="updateWeightData"
+      :open="openUpdateModal"/>
+    <actions-modal action="add"/>
 
     <q-item
       v-for="weight in weights"
@@ -41,12 +48,6 @@
     </q-item>
 
   </q-list>
-  <actions-modal
-    @closeUpdateModal="closeUpdateModal($event)"
-    action="update"
-    :weightData="updateWeightData"
-    :open="openUpdateModal"/>
-  <actions-modal action="add"/>
 </template>
 
 <script>
@@ -82,7 +83,12 @@ export default {
 
 <style scoped lang="scss">
 .q-list {
+  //max-width: 40rem;
   padding-bottom: 6rem;
+
+  .history-title {
+    font-size: 1.8rem;
+  }
 
   .q-item {
     background: $primary-400;

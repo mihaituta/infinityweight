@@ -2,10 +2,20 @@
   <q-btn
     v-if="action.toLowerCase() === 'add'"
     round
-    class="fixed-bottom-right shadow-10 q-mr-md q-mb-md lt-md"
+    class="fixed-bottom-right q-mr-md q-mb-md lt-sm z-top"
     color="secondary"
-    size="lg"
+    size="xl"
     push
+    icon="add"
+    @click="openModal = true"
+  ></q-btn>
+
+  <q-btn
+    v-if="action.toLowerCase() === 'add'"
+    class="desktop-add-btn q-my-xs gt-xs"
+    color="secondary"
+    push
+    label="Add new weight"
     icon="add"
     @click="openModal = true"
   ></q-btn>
@@ -61,7 +71,6 @@
             v-else-if="action.toLowerCase() === 'update'"
             class="deleteBtn"
             color="negative"
-            icon="delete"
             label="Delete"
             v-on:click="onDelete"
             v-close-popup
@@ -234,16 +243,16 @@ export default {
   font-size: 1.1rem;
 }
 
-.deleteBtn {
+.desktop-add-btn {
+  padding: 0.5rem 0.5rem;
+  font-size: 1rem;
 
-  padding-right: 1rem;
-
-  .q-icon {
-    font-size: 1.2rem;
-  }
+  /*.q-icon {
+    font-size: 1.7rem;
+  }*/
 
   .on-left {
-    margin-right: 0.5rem;
+    margin-right: 0.3rem;
   }
 
   .block {
