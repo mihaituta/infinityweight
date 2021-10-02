@@ -159,7 +159,8 @@ export default {
 .q-item {
   height: 4rem;
   padding: 0 2rem 0 2rem;
-  &:hover{
+
+  &:hover {
     color: $primary;
     background: $secondary-300;
   }
@@ -177,5 +178,6 @@ export default {
   color: $primary;
   background: $secondary;
 }
+
 
 </style>

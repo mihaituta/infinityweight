@@ -1,6 +1,6 @@
 <template>
-  <q-card class="chart-card q-mt-xl q-mx-xl" dark>
-    <q-card-section class="row justify-end q-pb-sm">
+  <q-card class="chart-card" dark>
+    <q-card-section class="toggle-btns-wrapper row justify-center q-pb-sm q-px-none">
       <q-btn-toggle
         v-model="selection"
         push
@@ -8,24 +8,18 @@
         text-color="primary"
         toggle-color="secondary-300"
         toggle-text-color="primary"
-        class=" no-ripple"
-        :options="[
-          {label: '1 Week', value: 'one_week'},
-          {label: '1 Month', value: 'one_month'},
-          {label: '6 Months', value: 'six_months'},
-          {label: '1 Year', value: 'one_year'},
-          {label: 'Year to date', value: 'ytd'},
-          {label: 'ALL', value: 'all'},
-        ]"
+        :options="toggleBtnOptions"
       />
     </q-card-section>
 
-    <q-card-section>
+    <q-card-section class="q-px-none q-pb-none">
       <div id="chart-timeline">
         <apexchart
+          class="ch"
           ref="chart"
+          width="100%"
           :height="this.height"
-          :options="chartOptions"
+          :options="options"
           :series="series"
         ></apexchart>
       </div>
@@ -35,7 +29,7 @@
 
 <script>
 import VueApexCharts from "vue3-apexcharts";
-import {date} from "quasar";
+import {date, useQuasar} from "quasar";
 import {mapGetters} from "vuex";
 
 export default {
@@ -47,14 +41,13 @@ export default {
         name: 'weights',
         data: []
       }],
-      height: 500,
-      chartOptions: {
+      height: 660,
+      options: {
         noData: {
           text: 'No data'
         },
         chart: {
           toolbar: {show: false},
-          height: 500,
           type: 'area',
           zoom: {
             enabled: false,
@@ -67,7 +60,7 @@ export default {
           align: 'center',
           style: {
             color: '#41B983FF',
-            fontSize: '20px',
+            fontSize: '24px',
             fontWeight: 'bold',
             fontFamily: 'Nunito sans'
           },
@@ -76,34 +69,25 @@ export default {
           colors: '#41B983FF',
           type: 'gradient',
           gradient: {
-
+            inverseColors: true,
             shade: 'dark',
             shadeIntensity: 1,
             opacityFrom: 0.6,
             opacityTo: 0.8,
-            // stops: [0, 100]
           }
         },
-
-        /* gradient: {
-           inverseColors: true,
-           shade: 'light',
-           type: "vertical",
-           opacityFrom: 0.85,
-           opacityTo: 0.55,
-           stops: [0, 100, 100, 100]
-         },*/
         dataLabels: {
           enabled: true,
           style: {
             fontSize: '1rem',
+            fontFamily: 'Nunito sans',
             colors: ['white']
           },
           /* background:{
               borderWidth: 0
            },*/
           offsetY: -10,
-          background: {enabled: false,}
+          background: {enabled: false,},
         },
         grid: {
           borderColor: '#363636',
@@ -114,9 +98,9 @@ export default {
           curve: 'smooth',
         },
         markers: {
-          size: 5,
+          size: 4,
           strokeWidth: 2,
-          strokeOpacity: 0.6,
+          strokeOpacity: 0.7,
           colors: '#41B983FF',
           hover: {
             size: 8,
@@ -125,15 +109,12 @@ export default {
             // do something on marker click
           }
         },
-        responsive: [{
-          breakpoint: 500,
-          options: {},
-        }],
-
         yaxis: {
           labels: {
             style: {
               colors: '#41B983FF',
+              fontSize: '1rem',
+              fontFamily: 'Nunito sans',
             },
             formatter: (y) => {
               if (typeof y !== "undefined") {
@@ -150,11 +131,15 @@ export default {
                 '</div>'
             },*/
           theme: 'dark',
+          style: {
+            fontSize: '1rem',
+            fontFamily: 'Nunito sans'
+          },
           marker: {
             show: true
           },
           // fillSeriesColor: true,
-          intersect: true,
+          intersect: false,
           shared: false,
           x: {
             formatter: (x) => date.formatDate(new Date(x), 'DD MMM YYYY')
@@ -168,7 +153,38 @@ export default {
             }
           },
         },
-      }
+        responsive: [{
+          breakpoint: 768,
+          options: {
+            title: {
+              style: {
+                fontSize: '20px',
+              }
+            },
+            chart: {
+              height: 400,
+            },
+            dataLabels: {
+              enabled: false
+            },
+            markers: {
+              size: 0
+            },
+            stroke: {
+              width: 1
+            },
+            yaxis: {
+              labels: {
+                style: {
+                  colors: '#41B983FF',
+                  fontSize: '0.8rem',
+                },
+                formatter: (y) => parseInt(y)
+              },
+            },
+          },
+        }],
+      },
     }
   },
   methods: {
@@ -553,11 +569,14 @@ export default {
       }]
     },
     setXaxis() {
-      this.chartOptions = {
-        ...this.chartOptions,
+      this.options = {
+        ...this.options,
         ...{
           xaxis: {
             type: 'datetime',
+            tooltip: {
+              enabled: false,
+            },
             min: new Date(new Date().setDate(new Date().getDate() - 7)).getTime(),
             max: this.series[0].data.length > 0
               ? this.series[0].data[this.series[0].data.length - 1][0].getTime()
@@ -573,6 +592,8 @@ export default {
             labels: {
               style: {
                 colors: '#41B983FF',
+                fontSize: '0.8rem',
+                fontFamily: 'Nunito sans'
               },
               /*  formatter: (val, timestamp) => {
                   return date.formatDate(new Date(timestamp), 'DD MMM YYYY')
@@ -585,6 +606,23 @@ export default {
   },
   computed: {
     ...mapGetters('myStore', ['weights']),
+    toggleBtnOptions: () => useQuasar().screen.gt.xs
+      ? [
+        {label: '1 Week', value: 'one_week'},
+        {label: '1 Month', value: 'one_month'},
+        {label: '6 Months', value: 'six_months'},
+        {label: '1 Year', value: 'one_year'},
+        {label: 'Year to date', value: 'ytd'},
+        {label: 'ALL', value: 'all'}
+      ]
+      : [
+        {label: '1W', value: 'one_week'},
+        {label: '1M', value: 'one_month'},
+        {label: '6M', value: 'six_months'},
+        {label: '1Y', value: 'one_year'},
+        {label: 'YTD', value: 'ytd'},
+        {label: 'ALL', value: 'all'},
+      ]
   },
   watch: {
     weights: {
@@ -592,7 +630,8 @@ export default {
       handler() {
         this.updateChart()
       }
-    },
+    }
+    ,
     selection() {
       if (this.weights.length === 0) {
         return
@@ -603,62 +642,236 @@ export default {
 
       switch (this.selection) {
         case 'one_week':
-          this.$refs.chart.zoomX(
-            new Date(new Date().setDate(new Date().getDate() - 7)).getTime(),
-            mostRecentWeightDate.getTime()
-          )
+          /* this.$refs.chart.zoomX(
+             new Date(new Date().setDate(new Date().getDate() - 7)).getTime(),
+             mostRecentWeightDate.getTime()
+           )*/
+          this.options = {
+            ...this.options,
+            ...{
+              dataLabels: {
+                enabled: true,
+              },
+              xaxis: {
+                type: 'datetime',
+                min: new Date(new Date().setDate(new Date().getDate() - 7)).getTime(),
+                max: mostRecentWeightDate.getTime(),
+                axisTicks: {
+                  show: true,
+                  height: 4,
+                },
+                labels: {
+                  style: {
+                    colors: '#41B983FF',
+                  },
+                },
+              }
+            }
+          }
           break
         case 'one_month':
-          this.$refs.chart.zoomX(
-            new Date(new Date().setMonth(new Date().getMonth() - 1)).getTime(),
-            mostRecentWeightDate.getTime()
-          )
+          /*  this.$refs.chart.zoomX(
+              new Date(new Date().setMonth(new Date().getMonth() - 1)).getTime(),
+              mostRecentWeightDate.getTime()
+            )*/
+          this.options = {
+            ...this.options,
+            ...{
+              dataLabels: {
+                enabled: true,
+              },
+              xaxis: {
+                type: 'datetime',
+                min: new Date(new Date().setMonth(new Date().getMonth() - 1)).getTime(),
+                max: mostRecentWeightDate.getTime(),
+                axisTicks: {
+                  show: true,
+                  height: 4,
+                },
+                labels: {
+                  style: {
+                    colors: '#41B983FF',
+                  },
+                },
+              }
+            }
+          }
           break
-        case 'six_months':
-          this.$refs.chart.zoomX(
+        case 'six_months': {
+          /*this.$refs.chart.zoomX(
             new Date(new Date().setMonth(new Date().getMonth() - 6)).getTime(),
             mostRecentWeightDate.getTime()
-          )
+          )*/
+          this.options = {
+            ...this.options,
+            ...{
+              dataLabels: {
+                enabled: false,
+              },
+              xaxis: {
+                type: 'datetime',
+                min: new Date(new Date().setMonth(new Date().getMonth() - 6)).getTime(),
+                max: mostRecentWeightDate.getTime(),
+                axisTicks: {
+                  show: true,
+                  height: 4,
+                },
+                labels: {
+                  style: {
+                    colors: '#41B983FF',
+                  },
+                },
+              }
+            }
+          }
           break
+        }
         case 'one_year':
-          this.$refs.chart.zoomX(
-            new Date(new Date().setFullYear(new Date().getFullYear() - 1)).getTime(),
-            mostRecentWeightDate.getTime()
-          )
+          /*  this.$refs.chart.zoomX(
+              new Date(new Date().setFullYear(new Date().getFullYear() - 1)).getTime(),
+              mostRecentWeightDate.getTime()
+            )*/
+          this.options = {
+            ...this.options,
+            ...{
+              dataLabels: {
+                enabled: false,
+              },
+              xaxis: {
+                type: 'datetime',
+                min: new Date(new Date().setFullYear(new Date().getFullYear() - 1)).getTime(),
+                max: mostRecentWeightDate.getTime(),
+                axisTicks: {
+                  show: true,
+                  height: 4,
+                },
+                labels: {
+                  style: {
+                    colors: '#41B983FF',
+                  },
+                },
+              }
+            }
+          }
           break
         case 'ytd':
-          this.$refs.chart.zoomX(
-            new Date(new Date().getFullYear(), 0, 1).getTime(),
-            mostRecentWeightDate.getTime()
-          )
+          /*    this.$refs.chart.zoomX(
+                new Date(new Date().getFullYear(), 0, 1).getTime(),
+                mostRecentWeightDate.getTime()
+              )*/
+          this.options = {
+            ...this.options,
+            ...{
+              dataLabels: {
+                enabled: false,
+              },
+              xaxis: {
+                type: 'datetime',
+                min: new Date(new Date().getFullYear(), 0, 1).getTime(),
+                max: mostRecentWeightDate.getTime(),
+                axisTicks: {
+                  show: true,
+                  height: 4,
+                },
+                labels: {
+                  style: {
+                    colors: '#41B983FF',
+                  },
+                },
+              }
+            }
+          }
           break
         case 'all':
-          this.$refs.chart.zoomX(
+          /*this.$refs.chart.zoomX(
             // between the date of the first and last elements in array = all weights
             oldestWeightDate.getTime(),
             mostRecentWeightDate.getTime()
-          )
+          )*/
+          this.options = {
+            ...this.options,
+            ...{
+              dataLabels: {
+                enabled: false,
+              },
+              xaxis: {
+                type: 'datetime',
+                min: oldestWeightDate.getTime(),
+                max: mostRecentWeightDate.getTime(),
+                axisTicks: {
+                  show: true,
+                  height: 4,
+                },
+                labels: {
+                  style: {
+                    colors: '#41B983FF',
+                  },
+                },
+              }
+            }
+          }
           break
         default:
       }
     }
-  },
+  }
+  ,
   components: {
     apexchart: VueApexCharts,
-  },
+  }
+  ,
   created() {
     this.updateChart()
     this.setXaxis()
-  },
+  }
+  ,
 }
 </script>
 
 <style lang='scss'>
-@import "../css/quasar.variables";
+.apexcharts-data-labels:nth-last-child(1) {
+  transform: translateX(-20px)
+}
 
 .chart-card {
+  background-color: $primary-500;
+
   .q-btn-toggle {
     margin-top: 0.3rem;
+  }
+}
+
+.toggle-btns-wrapper {
+  .q-btn {
+    font-size: 0.8rem;
+  }
+}
+
+@media (min-width: $breakpoint-sm-min) {
+  .toggle-btns-wrapper {
+    padding-right: 1rem;
+    justify-content: end;
+
+    .q-btn {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+@media (min-width: $breakpoint-md-min) {
+  .chart-card {
+    margin: 2rem 2rem 0 2rem;
+  }
+}
+
+@media (min-width: $breakpoint-lg-min) {
+  .chart-card {
+    padding: 0.7rem 1rem 1rem 1rem;
+    margin: 3rem 3rem 0 3rem;
+
+    .apexcharts-xaxis-label {
+      font-size: 1rem;
+    }
   }
 }
 

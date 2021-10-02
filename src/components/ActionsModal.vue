@@ -2,7 +2,7 @@
   <q-btn
     v-if="action.toLowerCase() === 'add'"
     round
-    class="fixed-bottom-right shadow-10 q-mr-md q-mb-md"
+    class="fixed-bottom-right shadow-10 q-mr-md q-mb-md lt-md"
     color="secondary"
     size="lg"
     push
