@@ -12,7 +12,7 @@
 
   <q-btn
     v-if="action.toLowerCase() === 'add'"
-    class="desktop-add-btn q-my-xs gt-xs"
+    class="desktop-add-btn q-my-md gt-xs"
     color="secondary"
     push
     label="Add new weight"

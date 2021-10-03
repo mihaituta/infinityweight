@@ -1,5 +1,5 @@
 <template>
-  <q-card class="chart-card" dark>
+  <q-card :flat="cardShadow" class="chart-card" dark>
     <q-card-section class="toggle-btns-wrapper row justify-center q-pb-sm q-px-none">
       <q-btn-toggle
         v-model="selection"
@@ -622,7 +622,9 @@ export default {
         {label: '1Y', value: 'one_year'},
         {label: 'YTD', value: 'ytd'},
         {label: 'ALL', value: 'all'},
-      ]
+      ],
+    // remove shadow of card on smaller screens
+    cardShadow: () => useQuasar().screen.lt.sm
   },
   watch: {
     weights: {
@@ -834,7 +836,7 @@ export default {
 }
 
 .chart-card {
-  background-color: $primary-500;
+  background-color: $primary;
 
   .q-btn-toggle {
     margin-top: 0.3rem;
@@ -850,6 +852,7 @@ export default {
 @media (min-width: $breakpoint-sm-min) {
   .chart-card {
     margin: 2rem 2rem 0 2rem;
+    background-color: $primary-400;
 
     .toggle-btns-wrapper {
       padding-right: 0.5rem;

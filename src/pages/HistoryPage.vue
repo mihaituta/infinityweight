@@ -48,6 +48,7 @@
     </q-item>
 
   </q-list>
+
 </template>
 
 <script>
@@ -83,7 +84,7 @@ export default {
 
 <style scoped lang="scss">
 .q-list {
-  //max-width: 40rem;
+  //max-width: 35rem;
   padding-bottom: 6rem;
 
   .history-title {
@@ -119,6 +120,13 @@ export default {
     &:hover {
       background: $primary-200;
     }
+  }
+}
+
+@media (min-width: $breakpoint-sm-min) {
+  .q-list {
+    max-width: 40rem;
+    padding: 1.5rem 3rem 2.5rem 3rem;
   }
 }
 
