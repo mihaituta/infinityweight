@@ -100,9 +100,9 @@ const actions = {
       });
   },
 
-  loginUser({}, payload) {
+  loginUser({state}, payload) {
     signInWithEmailAndPassword(fbAuth, payload.email, payload.password)
-      .then(res => {
+      .then(async res => {
         if (res) {
           Notify.create({
             progress: true,
@@ -154,7 +154,7 @@ const actions = {
     });
   },
 
-  handleAuthStateChanged({commit, dispatch}) {
+  handleAuthStateChanged({state, commit, dispatch}) {
     onAuthStateChanged(fbAuth, async user => {
       if (user) {
         // User is logged in
@@ -171,7 +171,9 @@ const actions = {
         } catch (err) {
           console.log(err)
         }
-        await this.$router.push('/')
+        if (this.$router.currentRoute.value.name === 'auth') {
+          await this.$router.replace('/')
+        }
       } else {
         // User is logged out
         await this.$router.replace('/auth')

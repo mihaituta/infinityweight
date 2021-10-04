@@ -4,7 +4,7 @@
     greedy
     class="auth-form"
   >
-    <h1 class="text-center text-capitalize openSans">
+    <h1 class="text-center text-capitalize">
       {{ tab }}
     </h1>
     <q-input
@@ -110,7 +110,7 @@ export default {
 
 .auth-form {
   h1 {
-    font-size: 3rem;
+    font-size: 2.7rem;
   }
 }
 

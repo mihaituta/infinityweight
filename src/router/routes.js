@@ -4,20 +4,19 @@ const routes = [
     component: () => import('layouts/MainLayout'),
     meta: {requiresAuth: true},
     children: [
-      {path: '/', component: () => import('pages/Index.vue')},
-      {path: '/calendar', component: () => import('pages/CalendarPage')},
-      {path: '/chart', component: () => import('pages/ChartPage')},
-      {path: '/history', component: () => import('pages/HistoryPage')},
+      {name: 'home', path: '/', component: () => import('pages/Index.vue')},
+      {name: 'calendar', path: '/calendar', component: () => import('pages/CalendarPage')},
+      {name: 'chart', path: '/chart', component: () => import('pages/ChartPage')},
+      {name: 'history', path: '/history', component: () => import('pages/HistoryPage')},
     ]
   },
   {
     path: '/auth',
     component: () => import('layouts/notAuth'),
     children: [
-      {path: '/auth', component: () => import('pages/Auth')},
+      {name: 'auth', path: '/auth', component: () => import('pages/Auth')},
     ]
   },
-
 
   // Always leave this as last one,
   // but you can also remove it

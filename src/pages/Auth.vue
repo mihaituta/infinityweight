@@ -1,6 +1,6 @@
 <template>
-  <q-page class="flex q-pa-lg">
-    <q-card dark class="full-width">
+  <q-page class="flex justify-center q-pa-lg">
+    <q-card dark class="shadow-10">
       <q-tabs
         dark
         v-model="tab"

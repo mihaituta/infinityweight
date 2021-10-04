@@ -1,8 +1,7 @@
 <template>
-  <q-layout view="lHh Lpr fFf">
-    <q-header class="q-py-sm" elevated>
+  <q-layout view="lHh Lpr fFf" class="bg-primary">
+    <q-header class="bg-primary-400" elevated>
       <q-toolbar>
-
         <q-toolbar-title class="text-secondary text-h5 q-ml-md text-weight-bold">
           InfinityWeight
         </q-toolbar-title>
@@ -24,6 +23,9 @@
       v-model="drawer"
       :breakpoint="1023"
       bordered
+      no-swipe-open
+      no-swipe-close
+      no-swipe-backdrop
     >
       <q-scroll-area
         style="height: calc(100% - 200px); margin-top: 200px;"
@@ -174,18 +176,15 @@ export default {
   }
 }
 
-.q-layout {
-  background: $primary;
-}
-
-.q-header {
-  background: $primary-400;
-}
-
 .my-menu-link {
   color: $primary;
   background: $secondary;
 }
 
+@media (min-width: $breakpoint-md-min) {
+  .q-header {
+    padding: 0.6rem 0;
+  }
+}
 
 </style>
