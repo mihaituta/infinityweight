@@ -172,7 +172,7 @@ export default {
               }
             },
             chart: {
-              height: 400,
+              height: 550,
             },
             dataLabels: {
               enabled: false
@@ -206,7 +206,6 @@ export default {
           parseFloat(weight.weight)
         ])
       })
-      console.log(this.weights)
       this.series = [{
         name: 'Weight',
         data: newData
