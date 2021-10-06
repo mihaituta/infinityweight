@@ -134,7 +134,7 @@ export default {
       const weightChanged = {
         id: this.action.toLowerCase() === 'update' ? this.weightData.id : null,
         weight: parseFloat(this.weight),
-        date: this.date
+        date: new Date(this.date.setHours(0, 0, 0, 0))
       }
 
       if (this.action.toLowerCase() === 'add') {

@@ -121,10 +121,11 @@
         </q-list>
       </q-scroll-area>
 
-      <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 200px">
+
+      <q-img class="absolute-top" src="https://besthqwallpapers.com/img/original/105135/4k-material-design-green-and-black-geometric-shapes-lines.jpg" style="height: 200px">
         <div class="q-mx-lg absolute-bottom bg-transparent">
           <q-avatar size="100px" class="q-mb-sm">
-            <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+            <q-img src="https://cdn.quasar.dev/img/boy-avatar.png"/>
           </q-avatar>
           <div v-if="userDetails.email">@{{ userDetails.email.split('@')[0] }}</div>
           <div class="text-weight-bold text-h6">{{ userDetails.name }}</div>
@@ -166,6 +167,12 @@ export default {
 </script>
 
 <style lang="scss">
+.q-drawer {
+  .q-img {
+
+  }
+}
+
 .q-item {
   height: 4rem;
   padding: 0 2rem 0 2rem;
