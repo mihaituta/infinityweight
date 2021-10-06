@@ -1,6 +1,6 @@
 <template>
   <q-btn
-    v-if="action.toLowerCase() === 'add'"
+    v-if="action.toLowerCase() === 'add' && addBtnVisible"
     round
     class="fixed-bottom-right q-mr-md q-mb-md lt-sm z-top"
     color="secondary"
@@ -11,7 +11,7 @@
   ></q-btn>
 
   <q-btn
-    v-if="action.toLowerCase() === 'add'"
+    v-if="action.toLowerCase() === 'add' && addBtnVisible"
     class="desktop-add-btn q-my-md gt-xs"
     color="secondary"
     push
@@ -64,7 +64,7 @@
           <date-picker
             @setDate="setDate($event)"
             action='add'
-            v-if="action.toLowerCase() === 'add'"
+            v-if="action.toLowerCase() === 'add' && !calendarPageAddModal"
           />
 
           <q-btn
@@ -75,6 +75,15 @@
             v-on:click="onDelete"
             v-close-popup
           />
+
+          <div
+            v-else-if="calendarPageAddModal"
+            class="updateDateDisplay flex items-center"
+          >
+            <q-icon name="event" size="sm" class="q-pr-sm"/>
+            {{ this.addDate }}
+          </div>
+
           <q-space/>
           <q-btn class="actionModalBtns" color="negative" label="Close" v-close-popup/>
           <q-btn class="actionModalBtns" color="secondary" type="submit" :label="action"/>
@@ -92,15 +101,16 @@ import {mapActions, mapGetters} from "vuex";
 
 export default {
   components: {DatePicker},
-  emits: ["closeUpdateModal"],
-  props: ['action', 'open', 'weightData'],
+  emits: ['closeUpdateModal', 'closeAddModal'],
+  props: ['action', 'open', 'weightData', 'addBtnVisible', 'calendarAddDate', 'calendarPageAddModal'],
   data() {
     return {
       openModal: false,
       dateModal: false,
       weight: '',
       date: new Date(),
-      updateDate: ''
+      updateDate: '',
+      addDate: ''
     }
   },
   methods: {
@@ -116,7 +126,6 @@ export default {
         this.date = new Date()
       } else {
         this.weight = ''
-        // this.date = ''
       }
     },
 
@@ -127,6 +136,7 @@ export default {
 
     closeModal() {
       this.$emit('closeUpdateModal')
+      this.$emit('closeAddModal')
     },
 
     onSubmit() {
@@ -134,15 +144,14 @@ export default {
       const weightChanged = {
         id: this.action.toLowerCase() === 'update' ? this.weightData.id : null,
         weight: parseFloat(this.weight),
-        date: new Date(this.date.setHours(0, 0, 0, 0))
+        date: this.calendarPageAddModal ? this.calendarAddDate : new Date(this.date.setHours(0, 0, 0, 0))
       }
-
       if (this.action.toLowerCase() === 'add') {
         this.addWeight(weightChanged)
         // this.populateDb()
       } else {
         // if weight data is unchanged, no update is required
-        if (this.weightData.id === weightChanged.id && this.weightData.date === this.date && this.weightData.weight === this.weight) {
+        if (this.weightData.id === weightChanged.id && this.weightData.weight === this.weight) {
           this.openModal = false
         } else {
           this.updateWeight(weightChanged)
@@ -163,6 +172,8 @@ export default {
           this.weight = ''
         }
         this.updateDate = date.formatDate(this.weightData.date, 'DD MMM YYYY')
+      } else {
+        this.addDate = date.formatDate(this.calendarAddDate, 'DD MMM YYYY')
       }
     },
 
@@ -170,38 +181,10 @@ export default {
       this.closeModal()
       this.resetFields()
     },
-
-    weightRules($e) {
-      // v-on:keypress="weightRules"
-      let keyCode = $e.keyCode
-      // weight cannot start with 0 or .
-      if (this.weight.length === 0 && (keyCode === 46 || keyCode === 48)) {
-        $e.preventDefault()
-      }
-
-      // only allow number and one dot
-      if (this.weight !== null && (keyCode < 48 || keyCode > 57) && (keyCode !== 46 || this.weight.indexOf('.') !== -1)) { // 46 is dot
-        $e.preventDefault()
-      }
-
-      // restrict weight to max 3 digits and allow to add a . to add decimals
-      if (this.weight != null && keyCode === 46 && this.weight.length >= 3) {
-        return true;
-      } else if (this.weight != null && this.weight.length >= 3 && this.weight.indexOf('.') === -1) {
-        $e.preventDefault()
-      }
-
-      //restrict to only 1 decimal
-      if ((this.weight != null && this.weight.indexOf('.') > -1 && (this.weight.split('.')[1].length >= 1))) {
-        $e.preventDefault()
-      }
-    },
   },
-
   computed: {
     ...mapGetters('myStore', ['weights']),
   },
-
   mounted() {
     // set the default weight in modal as the most recent logged date by the user
     if (this.action === 'add') {

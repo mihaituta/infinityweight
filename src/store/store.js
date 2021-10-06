@@ -264,7 +264,9 @@ const actions = {
       await deleteDoc(weightDoc)
       if (canUpdate) {
         const nextDayWeightDoc = doc(fbDB, `users/${state.userDetails.userId}/weights`, nextDayWeight.id)
-        await updateDoc(nextDayWeightDoc, {weightDiff})
+        await updateDoc(nextDayWeightDoc, {
+          weightDiff: parseFloat(weightDiff)
+        })
       }
       Notify.create({
         progress: true,
@@ -318,13 +320,13 @@ const actions = {
     try {
       await updateDoc(weightDoc, {
         weight: payload.weight,
-        weightDiff: selectedWeightDiff
+        weightDiff: parseFloat(selectedWeightDiff)
       })
       // only update next day difference if selected is not the most recent, since there is no next day
       if (selectedWeightIndex !== 0 && canUpdateNextDayWeight) {
         const nextDayWeightDoc = doc(fbDB, `users/${state.userDetails.userId}/weights`, nextDayWeight.id)
         await updateDoc(nextDayWeightDoc, {
-          weightDiff: nextDayWeightDiff
+          weightDiff: parseFloat(nextDayWeightDiff)
         })
       }
 
@@ -372,7 +374,7 @@ const actions = {
         await setDoc(weightDoc, {
           weight: payload.weight,
           date: payload.date.toISOString(),
-          weightDiff
+          weightDiff: parseFloat(weightDiff)
         })
         // recalculate the next day's weight difference when a weight is added before it
         const addedWeightIndex = state.weightsData.findIndex(item => item.id === weightId);
@@ -380,7 +382,7 @@ const actions = {
           const nextDayWeight = state.weightsData[addedWeightIndex - 1]
           const nextDayWeightDoc = doc(fbDB, `users/${state.userDetails.userId}/weights`, nextDayWeight.id)
           await updateDoc(nextDayWeightDoc, {
-            weightDiff: (nextDayWeight.weight - payload.weight).toFixed(1)
+            weightDiff: parseFloat((nextDayWeight.weight - payload.weight).toFixed(1))
           });
         }
       }
@@ -401,6 +403,12 @@ const actions = {
   async populateDb() {
     const weightsArray = [
       {
+        date: '6 Oct 2021',
+        weight: 76.1
+      }, {
+        date: '5 Oct 2021',
+        weight: 75.9
+      }, {
         date: '3 Oct 2021',
         weight: 76
       }, {
@@ -769,7 +777,7 @@ const actions = {
       batch.set(docRef, {
         weight: weight.weight,
         date: new Date(weight.date).toISOString(),
-        weightDiff: index < arr.length - 1 ? -(weight.weight - arr[index + 1].weight).toFixed(1).toString() : 0
+        weightDiff: index < arr.length - 1 ? parseFloat((weight.weight - arr[index + 1].weight).toFixed(1)) : 0
       })
     })
 

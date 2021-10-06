@@ -9,7 +9,9 @@
       action="update"
       :weightData="updateWeightData"
       :open="openUpdateModal"/>
-    <actions-modal action="add"/>
+    <actions-modal
+      :addBtnVisible="true"
+      action="add"/>
 
     <q-item
       v-for="weight in weights"
@@ -29,8 +31,8 @@
 
       <q-item-section class="q-mr-md item-diff" side>
         <div class="flex items-center">
-          <q-icon v-if="weight.weightDiff > 0" size="1.5rem" name="north" color="negative"></q-icon>
-          <q-icon v-else-if="weight.weightDiff < 0" size="1.5rem" name="south" color="secondary"></q-icon>
+          <q-icon v-if="weight.weightDiff > 0" size="1.5rem" name="north" color="negative"/>
+          <q-icon v-else-if="weight.weightDiff < 0" size="1.5rem" name="south" color="secondary"/>
 
           <q-item-label v-if="weight.weightDiff > 0" class="q-pl-xs text-negative">
             <!-- turn the string into a number to get rid of the zero after coma Ex: 35.0 -> 35 -->
