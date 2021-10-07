@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr fFf" class="bg-primary">
     <q-header class="bg-primary-400" elevated>
       <q-toolbar>
-        <q-toolbar-title class="text-secondary text-h5 q-ml-md text-weight-bold">
+        <q-toolbar-title class="navbar-title text-secondary q-ml-md text-weight-bold">
           InfinityWeight
         </q-toolbar-title>
 
@@ -121,14 +121,18 @@
         </q-list>
       </q-scroll-area>
 
-
-      <q-img class="absolute-top" src="https://besthqwallpapers.com/img/original/105135/4k-material-design-green-and-black-geometric-shapes-lines.jpg" style="height: 200px">
-        <div class="q-mx-lg absolute-bottom bg-transparent">
-          <q-avatar size="100px" class="q-mb-sm">
-            <q-img src="https://cdn.quasar.dev/img/boy-avatar.png"/>
+      <q-img class="absolute-top" src="../assets/avatar-bg2.jpg" style="height: 200px">
+        <div class="avatar-texts q-mx-lg absolute-bottom bg-transparent">
+          <q-avatar size="110px" class="q-mb-sm">
+            <img src="../assets/avatar.jpg" alt="avatar_img"/>
           </q-avatar>
-          <div v-if="userDetails.email">@{{ userDetails.email.split('@')[0] }}</div>
-          <div class="text-weight-bold text-h6">{{ userDetails.name }}</div>
+          <div v-if="userDetails.email" class="avatar-mail text-weight-bold">
+            @ {{ userDetails.email.split('@')[0] }}
+          </div>
+          <div class="avatar-name text-weight-bold flex items-center">
+            <q-icon size="sm" class="q-pr-xs" name="face"/>
+            {{ userDetails.name }}
+          </div>
         </div>
       </q-img>
     </q-drawer>
@@ -167,14 +171,28 @@ export default {
 </script>
 
 <style lang="scss">
+.navbar-title {
+  font-size: 1.6rem;
+}
+
 .q-drawer {
   .q-img {
+    .avatar-texts {
+      padding-bottom: 0.3rem;
 
+      .avatar-mail {
+        font-size: 1.3rem;
+      }
+
+      .avatar-name {
+        font-size: 1.4rem;
+      }
+    }
   }
 }
 
 .q-item {
-  height: 4rem;
+  height: 5rem;
   padding: 0 2rem 0 2rem;
 
   &:hover {
@@ -191,6 +209,9 @@ export default {
 @media (min-width: $breakpoint-md-min) {
   .q-header {
     padding: 0.6rem 0;
+    .navbar-title {
+      font-size: 2rem;
+    }
   }
 }
 

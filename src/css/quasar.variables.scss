@@ -33,9 +33,17 @@ $typography-font-family: 'Nunito sans', sans-serif !default;
 $text-weights: (thin: 200, light: 300, regular: 400, medium: 600, bold: 700, bolder: 800) !default;
 $button-font-weight: 700;
 
+$negative-400: hsl(354, 70%, 60%);
+.text-negative-400{color: $negative-400}
+.bg-negative-400 {background-color: $negative-400}
+
 $secondary-300: hsl(153, 100%, 60%);
 .text-secondary-300{color: $secondary-300}
 .bg-secondary-300 {background-color: $secondary-300}
+
+$secondary-400: hsl(153, 75%, 60%);
+.text-secondary-400{color: $secondary-400}
+.bg-secondary-400 {background-color: $secondary-400}
 
 $secondary-700: hsl(153, 45%, 40%);
 .text-secondary-700{color: $secondary-700}

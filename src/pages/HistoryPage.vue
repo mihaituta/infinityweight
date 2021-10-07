@@ -30,22 +30,24 @@
       </q-item-section>
 
       <q-item-section class="q-mr-md item-diff" side>
-        <div class="flex items-center">
-          <q-icon v-if="weight.weightDiff > 0" size="1.5rem" name="north" color="negative"/>
-          <q-icon v-else-if="weight.weightDiff < 0" size="1.5rem" name="south" color="secondary"/>
-
-          <q-item-label v-if="weight.weightDiff > 0" class="q-pl-xs text-negative">
+        <q-item-label v-if="weight.weightDiff > 0" class="q-pl-xs text-negative flex items-end">
+          <div class="flex align-items">
+            <q-icon size="1.4rem" name="north"/>
             <!-- turn the string into a number to get rid of the zero after coma Ex: 35.0 -> 35 -->
             {{ +weight.weightDiff }}
-            <span>kg</span></q-item-label>
-          <q-item-label v-else-if="weight.weightDiff < 0" class="q-pl-xs text-secondary">
-            <!-- turn the string into a positive number (weight loss is a negative number in database)
-             and get rid of '-' when it is displayed -->
-            {{ -weight.weightDiff }}
-            <span>kg</span></q-item-label>
-          <q-item-label v-else class="q-pl-xs same"> 0 <span>kg</span></q-item-label>
+          </div>
+          <span>kg</span>
+        </q-item-label>
 
-        </div>
+        <q-item-label v-else-if="weight.weightDiff < 0" class="q-pl-xs text-secondary flex items-center">
+          <q-icon size="1.4rem" name="south"/>
+          <!-- turn the string into a positive number (weight loss is a negative number in database)
+           and get rid of '-' when it is displayed -->
+          {{ -weight.weightDiff }}
+          <span>kg</span>
+        </q-item-label>
+
+        <q-item-label v-else class="q-pl-xs same"> 0 <span>kg</span></q-item-label>
       </q-item-section>
     </q-item>
 
@@ -86,7 +88,6 @@ export default {
 
 <style scoped lang="scss">
 .q-list {
-  //max-width: 35rem;
   padding-bottom: 6rem;
 
   .history-title {
@@ -98,9 +99,8 @@ export default {
 
     .item-date {
       max-width: 5rem;
-      font-size: 1rem;
+      font-size: 1.1rem;
       background: $secondary;
-
     }
 
     .item-weight {
@@ -112,10 +112,11 @@ export default {
     }
 
     .item-diff {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
 
       span {
-        font-size: 1rem;
+        padding-left: 0.2rem;
+        font-size: 1.2rem;
       }
     }
 
@@ -129,6 +130,15 @@ export default {
   .q-list {
     max-width: 40rem;
     padding: 1.5rem 3rem 2.5rem 3rem;
+
+    .q-item {
+      background: $primary-400;
+
+      .item-date {
+        max-width: 5.5rem;
+        font-size: 1.2rem;
+      }
+    }
   }
 }
 

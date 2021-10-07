@@ -55,37 +55,38 @@
             <!--            <div v-if="tempWeights.length > 0 && tempWeights.find(e => e.day === n) !== undefined">
                           {{ tempWeights.find(e => e.day === n).weight }}
                         </div>-->
-            <div v-if="getWeight(day) && getWeight(day).weightDiff === 0">
+            <div v-if="getWeight(day) && getWeight(day).weightDiff === 0" class="text-grey-5">
               {{ getWeight(day).weight }}
               <span class="gt-xs">kg</span>
-
-            </div>
-            <div v-else-if="getWeight(day) && getWeight(day).weightDiff > 0" class="weight ">
-              <div>
-                {{ getWeight(day).weight }}
-                <span class="gt-xs">kg</span>
-              </div>
-
-              <div class="q-pl-xs text-negative flex items-center gt-md">
-                <q-icon size="1.2rem" name="north" color="negative"/>
-                <!-- turn the string into a number to get rid of the zero after coma Ex: 35.0 -> 35 -->
-                {{ +getWeight(day).weightDiff }}kg
-              </div>
             </div>
 
             <div v-else-if="getWeight(day) && getWeight(day).weightDiff < 0" class="weight">
-              <div>
+              <div class="text-secondary-400">
                 {{ getWeight(day).weight }}
                 <span class="gt-xs">kg</span>
               </div>
 
-              <div class="q-pl-xs text-secondary flex items-center gt-md">
-                <q-icon size="1.2rem" name="south" color="secondary"/>
+              <div class="weightDiff q-pl-xs text-secondary flex items-center gt-md">
+                <q-icon size="1.3rem" name="south"/>
                 <!-- turn the string into a positive number (weight loss is a negative number in database)
                  and get rid of '-' when it is displayed -->
                 {{ -getWeight(day).weightDiff }}kg
               </div>
             </div>
+
+            <div v-else-if="getWeight(day) && getWeight(day).weightDiff > 0" class="weight">
+              <div class="text-negative-400">
+                {{ getWeight(day).weight }}
+                <span class="gt-xs">kg</span>
+              </div>
+
+              <div class="weightDiff q-pl-xs text-negative flex items-center gt-md">
+                <q-icon size="1.3rem" name="north"/>
+                <!-- turn the string into a number to get rid of the zero after coma Ex: 35.0 -> 35 -->
+                {{ +getWeight(day).weightDiff }}kg
+              </div>
+            </div>
+
 
           </div>
           <div class="day-hidden calendar-days" v-for="(n, index) in (43 - (currentMonthDays + firstMonthDay))"
@@ -251,10 +252,7 @@ export default {
     overflow: hidden;
     color: $grey-2;
     background-color: $secondary;
-    /* text-shadow: 1px 1px 1px #222,
-     1px -1px 1px #222,
-     -1px 1px 1px #222,
-     -1px -1px 1px #222;*/
+
     .selected-date-title {
       font-size: 1.5rem;
 
@@ -289,6 +287,7 @@ export default {
       grid-template-columns: repeat(7, minmax(20px, 1fr));
       background-color: $secondary-700;
       color: $grey-2;
+      border-bottom: 1px solid $primary;
     }
 
     .date {
@@ -298,8 +297,11 @@ export default {
       background-color: $primary-500;
 
       .active {
-        background-color: $secondary;
-        color: #2A4C50;
+        background-color: $secondary-700;
+        text-shadow: 1px 1px 1px $primary,
+        1px -1px 1px $primary,
+        -1px 1px 1px $primary,
+        -1px -1px 1px $primary;
       }
 
       .calendar-days {
@@ -311,21 +313,29 @@ export default {
         border-left: 1px solid $primary;
         border-bottom: 1px solid $primary;
 
+
         .weight {
-          display: flex;
-          justify-content: space-between;
-          padding: 0 1.5rem;
+          text-align: center;
         }
       }
 
       .day {
         cursor: pointer;
-        transition: background-color 0.4s;
+        transition: all 0.4s;
+        transition-property: background-color, text-shadow;
         font-size: 1rem;
 
         &:hover {
-          background-color: $secondary;
+          background-color: $secondary-700;
           color: #2A4C50;
+          text-shadow: 1px 1px 1px $primary,
+          1px -1px 1px $primary,
+          -1px 1px 1px $primary,
+          -1px -1px 1px $primary;
+        }
+
+        .weightDiff {
+          font-size: 1.1rem;
         }
       }
 
@@ -355,6 +365,7 @@ export default {
       .selected-date-title {
         font-size: 1.9rem;
       }
+
       .current-day {
         font-size: 2rem;
       }
@@ -368,10 +379,22 @@ export default {
       .weekdays {
         font-size: 1.4rem;
       }
+
       .date {
         .calendar-days {
           height: 110px;
           font-size: 1.4rem;
+        }
+
+      }
+    }
+
+    header {
+      .selected-date-title {
+        div {
+          .arrow {
+            font-size: 2.4rem;
+          }
         }
       }
     }
@@ -379,7 +402,15 @@ export default {
 }
 
 @media (min-width: $breakpoint-lg-min) {
-
+  #calendar {
+    .content {
+      .weight {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-around;
+      }
+    }
+  }
 }
 
 </style>
