@@ -162,32 +162,6 @@ export default {
         }
       }
     },
-    /*    getWeights() {
-          this.tempWeights = []
-          for (let i = 1; i <= this.currentMonthDays; i++) {
-            const selectedDay = this.currentDate.year + '/' + (this.currentDate.month + 1) + '/' + i
-            const selectedDate = new Date(selectedDay)
-            const weightObj = this.weights.find(e => new Date(e.date).getTime() === selectedDate.getTime())
-            let status = ''
-            if (weightObj !== undefined) {
-              if (Math.sign(weightObj.weightDiff) === 1) {
-                status = 'positive'
-              } else if (Math.sign(weightObj.weightDiff) === -1) {
-                status = 'negative'
-              } else if (Math.sign(weightObj.weightDiff) === -0 || Math.sign(weightObj.weightDiff) === 0) {
-                status = 'neutral'
-              }
-              this.tempWeights.push(
-                {
-                  day: i,
-                  weight: weightObj.weight,
-                  status: status
-                }
-              )
-            }
-          }
-        },*/
-
     weightActions(date) {
       this.currentDate.date = date
       const selectedDay = this.currentDate.year + '/' + (this.currentDate.month + 1) + '/' + date

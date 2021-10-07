@@ -38,7 +38,7 @@
             to="/"
             exact
             active-class="my-menu-link"
-            @click="setPageTitle('')"
+            @click="setPageTitle('Home')"
           >
             <q-item-section avatar>
               <q-icon name="home"/>
@@ -80,23 +80,6 @@
 
             <q-item-section>
               Chart
-            </q-item-section>
-          </q-item>
-
-          <q-item
-            clickable
-            v-ripple
-            to="/history"
-            exact active
-            active-class="my-menu-link"
-            @click="setPageTitle('History')"
-          >
-            <q-item-section avatar>
-              <q-icon name="format_list_bulleted"/>
-            </q-item-section>
-
-            <q-item-section>
-              History
             </q-item-section>
           </q-item>
 

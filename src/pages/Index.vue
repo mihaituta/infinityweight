@@ -1,42 +1,145 @@
 <template>
-  <q-page class="flex justify-center">
-    <q-card dark>
-      <q-card-section>
-        sms
-      </q-card-section>
-    </q-card>
-  </q-page>
+  <q-list class="q-px-md q-pt-md">
+    <q-item-label class="history-title q-pa-none text-secondary lt-sm" header>
+      History
+    </q-item-label>
+
+    <actions-modal
+      @closeUpdateModal="closeUpdateModal($event)"
+      action="update"
+      :weightData="updateWeightData"
+      :open="openUpdateModal"/>
+    <actions-modal
+      :addBtnVisible="true"
+      action="add"/>
+
+    <q-item
+      v-for="weight in weights"
+      :key="weight"
+      class="no-padding q-mt-md shadow-5"
+      clickable
+      @click="onClick(weight)"
+    >
+      <q-item-section class="q-px-sm text-center text-white item-date text-weight-bold">
+        <q-item-label>{{ weight.date.getDate() }} {{ months[weight.date.getMonth()] }}</q-item-label>
+        <q-item-label>{{ weight.date.getFullYear() }}</q-item-label>
+      </q-item-section>
+
+      <q-item-section class="q-pl-sm text-white item-weight">
+        <q-item-label>{{ weight.weight }} <span>kg</span></q-item-label>
+      </q-item-section>
+
+      <q-item-section class="q-mr-md item-diff" side>
+        <q-item-label v-if="weight.weightDiff > 0" class="q-pl-xs text-negative flex items-end">
+          <div class="flex align-items">
+            <q-icon size="1.4rem" name="north"/>
+            <!-- turn the string into a number to get rid of the zero after coma Ex: 35.0 -> 35 -->
+            {{ +weight.weightDiff }}
+          </div>
+          <span>kg</span>
+        </q-item-label>
+
+        <q-item-label v-else-if="weight.weightDiff < 0" class="q-pl-xs text-secondary flex items-center">
+          <q-icon size="1.4rem" name="south"/>
+          <!-- turn the string into a positive number (weight loss is a negative number in database)
+           and get rid of '-' when it is displayed -->
+          {{ -weight.weightDiff }}
+          <span>kg</span>
+        </q-item-label>
+
+        <q-item-label v-else class="q-pl-xs same"> 0 <span>kg</span></q-item-label>
+      </q-item-section>
+    </q-item>
+
+  </q-list>
+
 </template>
 
 <script>
 import {defineComponent} from 'vue';
+import {mapGetters} from "vuex";
 
 export default defineComponent({
-  name: 'PageIndex'
+  data() {
+    return {
+      months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
+      openUpdateModal: false,
+      updateWeightData: {}
+    }
+  },
+  methods: {
+    onClick(weight) {
+      this.updateWeightData = weight
+      this.openUpdateModal = true
+    },
+    closeUpdateModal() {
+      this.openUpdateModal = false
+    }
+  },
+  computed: {
+    ...mapGetters('myStore', ['weights'])
+  },
+  components: {
+    'actions-modal': require('components/ActionsModal').default
+  }
 })
 </script>
 
-<style lang="scss" scoped>
-.q-card {
-  width: 100%;
-  height: inherit;
-  margin: 1rem;
-}
+<style scoped lang="scss">
+.q-list {
+  padding-bottom: 6rem;
 
+  .history-title {
+    font-size: 1.8rem;
+  }
+
+  .q-item {
+    background: $primary-400;
+
+    .item-date {
+      max-width: 5rem;
+      font-size: 1.1rem;
+      background: $secondary;
+    }
+
+    .item-weight {
+      font-size: 1.5rem;
+
+      span {
+        font-size: 0.9rem;
+      }
+    }
+
+    .item-diff {
+      font-size: 1.3rem;
+
+      span {
+        padding-left: 0.2rem;
+        font-size: 1.2rem;
+      }
+    }
+
+    &:hover {
+      background: $primary-200;
+    }
+  }
+}
 
 @media (min-width: $breakpoint-sm-min) {
-  .q-card {
-    margin: 2rem;
+  .q-list {
+    max-width: 40rem;
+    padding: 1.5rem 3rem 2.5rem 3rem;
+
+    .q-item {
+      background: $primary-400;
+
+      .item-date {
+        max-width: 5.5rem;
+        font-size: 1.2rem;
+      }
+    }
   }
 }
 
-@media (min-width: $breakpoint-md-min) {
-  .q-card {
-    margin: 3rem;
-  }
-}
-
-@media (min-width: $breakpoint-lg-min) {
-
-}
 </style>
