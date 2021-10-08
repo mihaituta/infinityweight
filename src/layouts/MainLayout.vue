@@ -104,16 +104,12 @@
       </q-scroll-area>
 
       <q-img class="absolute-top" src="../assets/avatar-bg2.jpg" style="height: 200px">
-        <div class="avatar-texts q-mx-lg absolute-bottom bg-transparent">
-          <q-avatar size="110px" class="q-mb-sm">
+        <div class="avatar-texts q-mx-lg q-mt-xs  full-height bg-transparent">
+          <q-avatar size="130px" class="q-mb-sm">
             <img src="../assets/avatar.jpg" alt="avatar_img"/>
           </q-avatar>
           <div v-if="userDetails.email" class="avatar-mail text-weight-bold">
             @ {{ userDetails.email.split('@')[0] }}
-          </div>
-          <div class="avatar-name text-weight-bold flex items-center">
-            <q-icon size="sm" class="q-pr-xs" name="face"/>
-            {{ userDetails.name }}
           </div>
         </div>
       </q-img>
@@ -159,6 +155,7 @@ export default {
 
 .q-drawer {
   background-color: $primary-400;
+
   .q-img {
     .avatar-texts {
       padding-bottom: 0.3rem;
@@ -192,6 +189,7 @@ export default {
 @media (min-width: $breakpoint-md-min) {
   .q-header {
     padding: 0.6rem 0;
+
     .navbar-title {
       font-size: 2rem;
     }

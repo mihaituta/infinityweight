@@ -7,21 +7,6 @@
     <h1 class="text-center text-capitalize">
       {{ tab }}
     </h1>
-    <q-input
-      dark
-      v-if="tab === 'register'"
-      class="form-input q-mb-md"
-      filled
-      color="secondary"
-      v-model="formData.name"
-      label="Name"
-      ondemand
-      :rules="[ val => val && val.length > 0 || 'Name is required']"
-    >
-      <template v-slot:prepend>
-        <q-icon name="person"/>
-      </template>
-    </q-input>
 
     <q-input
       dark
@@ -80,7 +65,6 @@ export default {
     return {
       isPwd: true,
       formData: {
-        name: 'demo',
         email: 'demo@gmail.com',
         password: '123123'
       }

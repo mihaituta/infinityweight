@@ -74,11 +74,10 @@ const actions = {
           const userId = fbAuth.currentUser.uid
           try {
             setDoc(doc(fbDB, "users", userId), {
-              name: payload.name,
               email: payload.email,
             })
           } catch (err) {
-            console.error("Error creating user: ", err)
+            console.error("Error creating account: ", err)
           }
           Notify.create({
             progress: true,
@@ -98,7 +97,7 @@ const actions = {
             color: 'negative',
             timeout: 2000,
             position: 'top',
-            message: 'Email is unavailable!'
+            message: 'Email is taken!'
           })
         }
       });
@@ -166,7 +165,6 @@ const actions = {
           const docSnap = await getDoc(doc(fbDB, "users", user.uid));
           const userDetails = docSnap.data()
           commit('setUserDetails', {
-            name: userDetails.name,
             email: userDetails.email,
             userId: user.uid
           })
@@ -412,6 +410,12 @@ const actions = {
   async populateDb() {
     const weightsArray = [
       {
+        date: '8 Oct 2021',
+        weight: 76.6
+      }, {
+        date: '7 Oct 2021',
+        weight: 76.2
+      }, {
         date: '6 Oct 2021',
         weight: 76.1
       }, {

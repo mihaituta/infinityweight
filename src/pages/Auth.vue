@@ -1,6 +1,6 @@
 <template>
-  <q-page class="flex justify-center q-pa-lg">
-    <q-card dark class="shadow-10">
+  <q-page class="auth-page flex justify-center q-pa-lg">
+    <q-card class="auth-card shadow-10" dark>
       <q-tabs
         dark
         v-model="tab"
@@ -49,5 +49,19 @@ export default {
 <style lang="scss">
 .auth-tabs .q-tab__label {
   font-size: 1.2rem;
+}
+
+@media (min-width: $breakpoint-sm-min) {
+  .auth-page {
+    align-items: center;
+
+    .auth-card {
+      min-height: 45rem;
+
+      .q-tab-panels {
+        margin-top: 3rem;
+      }
+    }
+  }
 }
 </style>
