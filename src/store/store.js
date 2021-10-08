@@ -28,10 +28,14 @@ import {date, Notify} from "quasar";
 const state = {
   userDetails: {},
   weightsData: [],
+  loadingStatus: true,
   weightsListener: null,
 }
 
 const mutations = {
+  setLoadingStatus(state, payload) {
+    state.loadingStatus = payload
+  },
   setUserDetails(state, payload) {
     state.userDetails = payload
   },
@@ -100,7 +104,7 @@ const actions = {
       });
   },
 
-  loginUser({state}, payload) {
+  loginUser(state, payload) {
     signInWithEmailAndPassword(fbAuth, payload.email, payload.password)
       .then(async res => {
         if (res) {
@@ -154,7 +158,7 @@ const actions = {
     });
   },
 
-  handleAuthStateChanged({state, commit, dispatch}) {
+  handleAuthStateChanged({commit, dispatch}) {
     onAuthStateChanged(fbAuth, async user => {
       if (user) {
         // User is logged in
@@ -181,22 +185,28 @@ const actions = {
       }
     })
   },
+
   async getAllWeights({commit, state}) {
     const weightsQuery = query(collection(fbDB, `users/${state.userDetails.userId}/weights`), orderBy('date'));
-    const snapshot = await getDocs(weightsQuery);
-    const weightData = []
-    await snapshot.forEach(doc => {
-      let weight = doc.data()
-      const id = doc.id
-      const temp = {
-        id,
-        weight: weight.weight.toString(),
-        weightDiff: weight.weightDiff,
-        date: new Date(weight.date)
-      }
-      weightData.unshift(temp)
-    });
-    await commit('setWeights', weightData)
+    try {
+      const snapshot = await getDocs(weightsQuery);
+      const weightData = []
+      await snapshot.forEach(doc => {
+        let weight = doc.data()
+        const id = doc.id
+        const temp = {
+          id,
+          weight: weight.weight.toString(),
+          weightDiff: weight.weightDiff,
+          date: new Date(weight.date)
+        }
+        weightData.unshift(temp)
+      });
+      await commit('setLoadingStatus', false)
+      await commit('setWeights', weightData)
+    } catch (e) {
+      console.log(e.message)
+    }
   },
 
   async weightsListener({commit, state}) {
@@ -216,7 +226,6 @@ const actions = {
               weightDiff: weight.weightDiff,
               date: new Date(weight.date)
             }
-
             if (change.type === 'added') {
               commit('addWeight', data)
             } else if (change.type === 'modified') {
@@ -786,7 +795,8 @@ const actions = {
 }
 
 const getters = {
-  weights: state => state.weightsData
+  weights: state => state.weightsData,
+  loadingStatus: state => state.loadingStatus
 }
 
 export default {

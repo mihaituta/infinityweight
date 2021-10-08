@@ -6,8 +6,9 @@
           <div>CURRENT</div>
           <q-separator/>
           <div class="content">
-            <div v-if="weights.length > 0" class="text-grey-5">{{ weights[0].weight }} kg</div>
-            <q-skeleton v-else type="rect"/>
+            <q-skeleton v-if="loadingStatus" type="rect"/>
+            <div v-else-if="weights.length > 0" class="text-grey-5">{{ weights[0].weight }} kg</div>
+            <div v-else class="text-grey-5">No weights</div>
           </div>
         </q-card-section>
 
@@ -15,7 +16,8 @@
           <div>CHANGE</div>
           <q-separator/>
           <div class="content">
-            <div v-if="weights.length > 0 && weights[0].weightDiff > 0" class="text-negative flex items-center">
+            <q-skeleton v-if="loadingStatus" type="rect"/>
+            <div v-else-if="weights.length > 0 && weights[0].weightDiff > 0" class="text-negative flex items-center">
               <q-icon name="north"/>
               <!-- turn the string into a number to get rid of the zero after coma Ex: 35.0 -> 35 -->
               <div> {{ +weights[0].weightDiff }} kg</div>
@@ -32,7 +34,8 @@
             <div v-else-if="weights.length > 0 && weights[0].weightDiff === 0" class="text-grey-5">
               Same weight
             </div>
-            <q-skeleton v-else class="bg-negative" type="rect"/>
+
+            <div v-else class="text-grey-5">No weights</div>
           </div>
         </q-card-section>
 
@@ -40,7 +43,9 @@
           <div>THIS WEEK</div>
           <q-separator/>
           <div class="content">
-            <div v-if="weights.length > 0 && thisWeekChange > 0" class=" text-negative flex items-center">
+            <q-skeleton v-if="loadingStatus" type="rect"/>
+
+            <div v-else-if="weights.length > 0 && thisWeekChange > 0" class=" text-negative flex items-center">
               <q-icon name="north"/>
               {{ +thisWeekChange }} kg
             </div>
@@ -54,7 +59,7 @@
               Same weight
             </div>
 
-            <q-skeleton v-else class="bg-secondary" type="rect"/>
+            <div v-else class="text-grey-5">No weights</div>
           </div>
         </q-card-section>
 
@@ -62,7 +67,9 @@
           <div>THIS MONTH</div>
           <q-separator/>
           <div class="content">
-            <div v-if="weights.length > 0 && thisMonthChange > 0" class=" text-negative flex items-end">
+            <q-skeleton v-if="loadingStatus" type="rect"/>
+
+            <div v-else-if="weights.length > 0 && thisMonthChange > 0" class=" text-negative flex items-end">
               <div class="flex align-items">
                 <q-icon name="north"/>
                 {{ +thisMonthChange }} kg
@@ -78,7 +85,7 @@
               Same weight
             </div>
 
-            <q-skeleton v-else class="bg-secondary" type="rect"/>
+            <div v-else class="text-grey-5">No weights</div>
           </div>
         </q-card-section>
 
@@ -86,7 +93,9 @@
           <div>THIS YEAR</div>
           <q-separator/>
           <div class="content">
-            <div v-if="weights.length > 0 && thisYearChange > 0" class=" text-negative flex items-end">
+            <q-skeleton v-if="loadingStatus" type="rect"/>
+
+            <div v-else-if="weights.length > 0 && thisYearChange > 0" class=" text-negative flex items-end">
               <div class="flex align-items">
                 <q-icon name="north"/>
                 {{ +thisYearChange }} kg
@@ -102,7 +111,7 @@
               Same weight
             </div>
 
-            <q-skeleton v-else class="bg-secondary" type="rect"/>
+            <div v-else class="text-grey-5">No weights</div>
           </div>
         </q-card-section>
 
@@ -111,7 +120,8 @@
           <q-separator class="q-my-sm"/>
 
           <div class="content">
-            <div v-if="weights.length > 0 && allTimeChange > 0" class=" text-negative flex items-end">
+            <q-skeleton v-if="loadingStatus" type="rect"/>
+            <div v-else-if="weights.length > 0 && allTimeChange > 0" class=" text-negative flex items-end">
               <div class="flex align-items">
                 <q-icon name="north"/>
                 {{ +allTimeChange }} kg
@@ -127,7 +137,7 @@
               Same weight
             </div>
 
-            <q-skeleton v-else class="bg-secondary" type="rect"/>
+            <div v-else class="text-grey-5">No weights</div>
           </div>
         </q-card-section>
       </q-card>
@@ -149,7 +159,58 @@
           History
         </div>
 
-        <q-card-section class="q-pa-none" v-if="weights.length > 0">
+        <q-card-section v-if="loadingStatus" class="items-skeleton">
+          <div class="bg-primary-200 full-width flex items-center">
+            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
+            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
+            <q-space/>
+            <q-skeleton class="bg-secondary q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
+          </div>
+          <div class="bg-primary-200 full-width flex items-center">
+            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
+            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
+            <q-space/>
+            <q-skeleton class="bg-secondary q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
+          </div>
+          <div class="bg-primary-200 full-width flex items-center">
+            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
+            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
+            <q-space/>
+            <q-skeleton class="bg-negative q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
+          </div>
+          <div class="bg-primary-200 full-width flex items-center">
+            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
+            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
+            <q-space/>
+            <q-skeleton class="bg-secondary q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
+          </div>
+          <div class="bg-primary-200 full-width flex items-center">
+            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
+            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
+            <q-space/>
+            <q-skeleton class="bg-negative q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
+          </div>
+          <div class="bg-primary-200 full-width flex items-center">
+            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
+            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
+            <q-space/>
+            <q-skeleton class="bg-negative q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
+          </div>
+          <div class="bg-primary-200 full-width flex items-center">
+            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
+            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
+            <q-space/>
+            <q-skeleton class="bg-secondary q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
+          </div>
+          <div class="bg-primary-200 full-width flex items-center">
+            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
+            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
+            <q-space/>
+            <q-skeleton class="bg-negative q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
+          </div>
+        </q-card-section>
+
+        <q-card-section v-else-if="weights.length > 0" class="q-pa-none">
           <q-list>
             <q-item
               v-for="weight in weights"
@@ -189,57 +250,6 @@
             </q-item>
           </q-list>
         </q-card-section>
-
-        <q-card-section v-else class="items-skeleton">
-          <div class="bg-primary-200 full-width flex items-center">
-            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
-            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
-            <q-space/>
-            <q-skeleton class="bg-secondary q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
-          </div>
-          <div class="bg-primary-200 full-width flex items-center">
-            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
-            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
-            <q-space/>
-            <q-skeleton class="bg-secondary q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
-          </div>
-          <div class="bg-primary-200 full-width flex items-center">
-            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
-            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
-            <q-space/>
-            <q-skeleton class="bg-negative q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
-          </div>
-          <div class="bg-primary-200 full-width flex items-center">
-            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
-            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
-            <q-space/>
-            <q-skeleton class="bg-secondary q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
-          </div>
-          <div class="bg-primary-200 full-width flex items-center">
-            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
-            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
-            <q-space/>
-            <q-skeleton class="bg-negative q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
-          </div>
-          <div class="bg-primary-200 full-width flex items-center">
-            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
-            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
-            <q-space/>
-            <q-skeleton class="bg-negative q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
-          </div>
-          <div class="bg-primary-200 full-width flex items-center">
-            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
-            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
-            <q-space/>
-            <q-skeleton class="bg-secondary q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
-          </div>
-          <div class="bg-primary-200 full-width flex items-center">
-            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
-            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
-            <q-space/>
-            <q-skeleton class="bg-negative q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
-          </div>
-        </q-card-section>
       </q-card>
     </div>
   </q-page>
@@ -269,7 +279,7 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapGetters('myStore', ['weights']),
+    ...mapGetters('myStore', ['weights', 'loadingStatus']),
     // remove shadow of card on smaller screens
     cardShadow: () => useQuasar().screen.lt.sm,
     thisWeekChange() {
@@ -356,6 +366,7 @@ export default defineComponent({
 
   .items-card {
     background-color: transparent;
+    height: 100%;
 
     .title {
       font-size: 1.8rem;
@@ -436,6 +447,7 @@ export default defineComponent({
 
     .items-card {
       background-color: $primary-400;
+      min-height: 6.5rem;
 
       .q-list {
         padding: 1rem 2rem 2.5rem 2rem;
@@ -478,6 +490,7 @@ export default defineComponent({
 
       .items-card {
         margin-right: 0.5rem;
+        min-height: 5.6rem;
 
         .q-list {
           padding: 0 1rem 1rem 1rem;
@@ -514,6 +527,7 @@ export default defineComponent({
 
       .items-card {
         margin-right: 1.5rem;
+        min-height: 7.6rem;
 
         .q-list {
           padding: 0 3rem 3rem 3rem;
