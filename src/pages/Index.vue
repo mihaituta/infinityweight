@@ -162,6 +162,7 @@
           />
 
           <q-input
+            v-if="weights.length"
             dark
             class="search-input"
             v-model="searchDate"
@@ -419,6 +420,8 @@ export default defineComponent({
     height: 100%;
 
     .actions {
+      padding: 0;
+
       .title {
         font-size: 1.8rem;
         margin-bottom: 0.5rem;
@@ -574,7 +577,7 @@ export default defineComponent({
 
       .items-card {
         margin-right: 0.5rem;
-        min-height: 5.6rem;
+        min-height: 4rem;
 
         .actions {
           padding: 1rem 1rem 0 1rem;
@@ -615,7 +618,7 @@ export default defineComponent({
 
       .items-card {
         margin-right: 1.5rem;
-        min-height: 7.6rem;
+        min-height: 8.5rem;
 
         .actions {
           padding: 3rem 3rem 0 3rem;
@@ -642,4 +645,5 @@ export default defineComponent({
     }
   }
 }
+
 </style>

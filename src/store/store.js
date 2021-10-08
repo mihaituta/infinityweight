@@ -45,20 +45,32 @@ const mutations = {
   setWeights(state, payload) {
     state.weightsData = payload;
   },
-  addWeight(state, weight) {
-    state.weightsData.unshift(weight)
-    // sort weights desc by date
-    state.weightsData = state.weightsData.sort((a, b) => b.date - a.date)
+  addWeight(state, weightToAdd) {
+    // if there are no weights add the new one
+    if (state.weightsData.length === 0) {
+      state.weightsData.unshift(weightToAdd)
+    }
+
+    // if the weight to add is older than the oldest weight in array, add it to the end of array (its now the oldest one)
+    if (weightToAdd.date < state.weightsData[state.weightsData.length - 1].date) {
+      state.weightsData.push(weightToAdd)
+    }
+
+    // traverse the weights array from most recent to oldest and find where it fits relating to date
+    state.weightsData.some((weightInState, index) => {
+      if (weightToAdd.date > weightInState.date) {
+        state.weightsData.splice(index, 0, weightToAdd);
+        return true
+      }
+    })
   },
   updateWeight(state, weight) {
     // find the weight in array and replace it with the new one
     state.weightsData = [...state.weightsData.map(item => item.id !== weight.id ? item : {...item, ...weight.data})]
-    // sort weights desc by date
-    state.weightsData = state.weightsData.sort((a, b) => b.date - a.date)
   },
-  deleteWeight(state, weightId) {
-    const selectedWeightIndex = state.weightsData.findIndex(item => item.id === weightId);
-    state.weightsData.splice(selectedWeightIndex, 1)
+  deleteWeight(state, weight_id) {
+    const weightToDelete = state.weightsData.findIndex(item => item.id === weight_id);
+    state.weightsData.splice(weightToDelete, 1)
   },
   clearData(state) {
     state.userDetails = null;
@@ -131,11 +143,12 @@ const actions = {
       })
   },
 
-  async logoutUser({state}) {
+  async logoutUser({commit, state}) {
     // this unsubscribes from the listener so it doesn't throw error because of firebase rules trying to listen for changes when there is no user authenticated
     state.weightsListener()
 
     await signOut(fbAuth).then(() => {
+      commit('setLoadingStatus', true)
       Notify.create({
         progress: true,
         type: 'positive',
