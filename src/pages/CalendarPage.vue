@@ -14,7 +14,7 @@
       :open="openAddModal"
     />
 
-    <div id="calendar" class="full-width">
+    <div id="calendar">
       <header>
         <div class="current-day">
           {{ `${weekdayNames[currentDay]}, ${month[currentDate.month]} ${currentDate.date}` }}
@@ -52,9 +52,6 @@
                :key="'day'+index">
             <div class="text-grey-2"> {{ day }}</div>
 
-            <!--            <div v-if="tempWeights.length > 0 && tempWeights.find(e => e.day === n) !== undefined">
-                          {{ tempWeights.find(e => e.day === n).weight }}
-                        </div>-->
             <div v-if="getWeight(day) && getWeight(day).weightDiff === 0" class="text-grey-5">
               {{ getWeight(day).weight }}
               <span class="gt-xs">kg</span>
@@ -87,13 +84,13 @@
               </div>
             </div>
 
-
           </div>
           <div class="day-hidden calendar-days" v-for="(n, index) in (43 - (currentMonthDays + firstMonthDay))"
                :key="'next'+index">
             {{ n }}
           </div>
         </div>
+
       </div>
     </div>
   </q-page>
@@ -199,7 +196,6 @@ export default {
       } else {
         this.currentDate.month -= 1;
       }
-
     }
   },
   components: {
@@ -212,162 +208,169 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.q-page {
+  #calendar {
+    user-select: none;
+    color: $grey-4;
 
-#calendar {
-  user-select: none;
-  color: $grey-4;
+    header {
+      padding: 0.7rem 0;
+      display: flex;
+      flex-flow: column;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      color: $grey-2;
+      background-color: $secondary;
 
-  header {
-    padding: 0.7rem 0;
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
-    text-align: center;
-    overflow: hidden;
-    color: $grey-2;
-    background-color: $secondary;
+      .selected-date-title {
+        font-size: 1.5rem;
 
-    .selected-date-title {
-      font-size: 1.5rem;
+        div {
+          display: flex;
+          justify-content: center;
 
-      div {
-        display: flex;
-        justify-content: center;
+          .arrow {
+            font-size: 2rem;
+            cursor: pointer;
+            transition: 0.3s;
 
-        .arrow {
-          font-size: 2rem;
-          cursor: pointer;
-          transition: 0.3s;
-
-          &:hover {
-            color: $secondary-300;
+            &:hover {
+              color: $secondary-300;
+            }
           }
         }
       }
+
+      .current-day {
+        font-size: 1.5rem;
+      }
     }
 
-    .current-day {
-      font-size: 1.5rem;
-    }
-  }
-
-  .content {
-    height: 100%;
-
-    .weekdays {
-      text-align: center;
-      padding: 0.5rem 0;
-      display: grid;
-      grid-template-columns: repeat(7, minmax(20px, 1fr));
-      background-color: $secondary-700;
-      color: $grey-2;
-      border-bottom: 1px solid $primary;
-    }
-
-    .date {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(20px, 1fr));
+    .content {
       height: 100%;
-      background-color: $primary-500;
 
-      .active {
-        background-color: $secondary-700;
-        text-shadow: 1px 1px 1px $primary,
-        1px -1px 1px $primary,
-        -1px 1px 1px $primary,
-        -1px -1px 1px $primary;
-      }
-
-      .calendar-days {
-        display: flex;
-        flex-flow: column;
-        justify-content: center;
+      .weekdays {
         text-align: center;
-        height: 70px;
-        border-left: 1px solid $primary;
+        padding: 0.5rem 0;
+        display: grid;
+        grid-template-columns: repeat(7, minmax(20px, 1fr));
+        background-color: $secondary-700;
+        color: $grey-2;
         border-bottom: 1px solid $primary;
-
-
-        .weight {
-          text-align: center;
-        }
       }
 
-      .day {
-        cursor: pointer;
-        transition: all 0.4s;
-        transition-property: background-color, text-shadow;
-        font-size: 1rem;
+      .date {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(20px, 1fr));
+        height: 100%;
+        background-color: $primary-400;
+        border-right: 1px solid $primary;
 
-        &:hover {
+        .active {
           background-color: $secondary-700;
-          color: #2A4C50;
           text-shadow: 1px 1px 1px $primary,
           1px -1px 1px $primary,
           -1px 1px 1px $primary,
           -1px -1px 1px $primary;
         }
 
-        .weightDiff {
-          font-size: 1.1rem;
-        }
-      }
+        .calendar-days {
+          display: flex;
+          flex-flow: column;
+          justify-content: center;
+          text-align: center;
+          height: 70px;
+          border-left: 1px solid $primary;
+          border-bottom: 1px solid $primary;
 
-      .day-hidden {
-        color: $grey-9;
+
+          .weight {
+            text-align: center;
+          }
+        }
+
+        .day {
+          cursor: pointer;
+          transition: all 0.4s;
+          transition-property: background-color, text-shadow;
+          font-size: 1rem;
+
+          &:hover {
+            background-color: $secondary-700;
+            color: #2A4C50;
+            text-shadow: 1px 1px 1px $primary,
+            1px -1px 1px $primary,
+            -1px 1px 1px $primary,
+            -1px -1px 1px $primary;
+          }
+
+          .weightDiff {
+            font-size: 1.1rem;
+          }
+        }
+
+        .day-hidden {
+          color: $grey-9;
+        }
       }
     }
   }
 }
 
 @media (min-width: $breakpoint-sm-min) {
-  #calendar {
-    .content {
-      .weekdays {
-        font-size: 1.2rem;
-      }
+  .q-page {
+    padding: 2rem;
 
-      .date {
-        .calendar-days {
-          height: 100px;
+    #calendar {
+      .content {
+        .weekdays {
           font-size: 1.2rem;
         }
-      }
-    }
 
-    header {
-      .selected-date-title {
-        font-size: 1.9rem;
+        .date {
+          .calendar-days {
+            height: 100px;
+            font-size: 1.2rem;
+          }
+        }
       }
 
-      .current-day {
-        font-size: 2rem;
+      header {
+        .selected-date-title {
+          font-size: 1.9rem;
+        }
+
+        .current-day {
+          font-size: 2rem;
+        }
       }
     }
   }
 }
 
 @media (min-width: $breakpoint-md-min) {
-  #calendar {
-    .content {
-      .weekdays {
-        font-size: 1.4rem;
-      }
-
-      .date {
-        .calendar-days {
-          height: 110px;
+  .q-page {
+    #calendar {
+      .content {
+        .weekdays {
           font-size: 1.4rem;
         }
 
+        .date {
+          .calendar-days {
+            height: 100px;
+            font-size: 1.4rem;
+          }
+        }
       }
-    }
 
-    header {
-      .selected-date-title {
-        div {
-          .arrow {
-            font-size: 2.4rem;
+      header {
+        .selected-date-title {
+          div {
+            .arrow {
+              font-size: 2.4rem;
+            }
           }
         }
       }
@@ -376,12 +379,16 @@ export default {
 }
 
 @media (min-width: $breakpoint-lg-min) {
-  #calendar {
-    .content {
-      .weight {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-around;
+  .q-page {
+    padding: 3rem;
+
+    #calendar {
+      .content {
+        .weight {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-around;
+        }
       }
     }
   }

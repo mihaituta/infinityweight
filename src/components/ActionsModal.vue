@@ -12,7 +12,7 @@
 
   <q-btn
     v-if="action.toLowerCase() === 'add' && addBtnVisible"
-    class="desktop-add-btn q-my-md gt-xs"
+    class="desktop-add-btn gt-xs"
     color="secondary"
     push
     label="Add new weight"
@@ -229,10 +229,7 @@ export default {
 .desktop-add-btn {
   padding: 0.5rem 0.5rem;
   font-size: 1rem;
-
-  /*.q-icon {
-    font-size: 1.7rem;
-  }*/
+  margin: 1rem 0;
 
   .on-left {
     margin-right: 0.3rem;
@@ -240,6 +237,24 @@ export default {
 
   .block {
     padding-right: 0.3rem;
+  }
+}
+
+@media (min-width: $breakpoint-sm-min){
+  .desktop-add-btn {
+    margin: 2rem 2rem 0 2rem;
+  }
+}
+
+@media (min-width: $breakpoint-md-min) {
+  .desktop-add-btn {
+    margin: 1.5rem 1rem 0.5rem 1rem;
+  }
+}
+
+@media (min-width: $breakpoint-lg-min) {
+  .desktop-add-btn {
+    margin: 2.5rem 3rem 1.5rem 3rem;
   }
 }
 

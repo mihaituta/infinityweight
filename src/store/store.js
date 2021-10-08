@@ -41,7 +41,7 @@ const mutations = {
   setWeights(state, payload) {
     state.weightsData = payload;
   },
-  async addWeight(state, weight) {
+  addWeight(state, weight) {
     state.weightsData.unshift(weight)
     // sort weights desc by date
     state.weightsData = state.weightsData.sort((a, b) => b.date - a.date)
@@ -196,7 +196,7 @@ const actions = {
       }
       weightData.unshift(temp)
     });
-    commit('setWeights', weightData)
+    await commit('setWeights', weightData)
   },
 
   async weightsListener({commit, state}) {

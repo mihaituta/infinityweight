@@ -1,63 +1,254 @@
 <template>
-  <q-list class="q-px-md q-pt-md">
-    <q-item-label class="history-title q-pa-none text-secondary lt-sm" header>
-      History
-    </q-item-label>
-
-    <actions-modal
-      @closeUpdateModal="closeUpdateModal($event)"
-      action="update"
-      :weightData="updateWeightData"
-      :open="openUpdateModal"/>
-    <actions-modal
-      :addBtnVisible="true"
-      action="add"/>
-
-    <q-item
-      v-for="weight in weights"
-      :key="weight"
-      class="no-padding q-mt-md shadow-5"
-      clickable
-      @click="onClick(weight)"
-    >
-      <q-item-section class="q-px-sm text-center text-white item-date text-weight-bold">
-        <q-item-label>{{ weight.date.getDate() }} {{ months[weight.date.getMonth()] }}</q-item-label>
-        <q-item-label>{{ weight.date.getFullYear() }}</q-item-label>
-      </q-item-section>
-
-      <q-item-section class="q-pl-sm text-white item-weight">
-        <q-item-label>{{ weight.weight }} <span>kg</span></q-item-label>
-      </q-item-section>
-
-      <q-item-section class="q-mr-md item-diff" side>
-        <q-item-label v-if="weight.weightDiff > 0" class="q-pl-xs text-negative flex items-end">
-          <div class="flex align-items">
-            <q-icon size="1.4rem" name="north"/>
-            <!-- turn the string into a number to get rid of the zero after coma Ex: 35.0 -> 35 -->
-            {{ +weight.weightDiff }}
+  <q-page>
+    <div class="wrapper">
+      <q-card :flat="cardShadow" dark class="stats-card">
+        <q-card-section>
+          <div>CURRENT</div>
+          <q-separator/>
+          <div class="content">
+            <div v-if="weights.length > 0" class="text-grey-5">{{ weights[0].weight }} kg</div>
+            <q-skeleton v-else type="rect"/>
           </div>
-          <span>kg</span>
-        </q-item-label>
+        </q-card-section>
 
-        <q-item-label v-else-if="weight.weightDiff < 0" class="q-pl-xs text-secondary flex items-center">
-          <q-icon size="1.4rem" name="south"/>
-          <!-- turn the string into a positive number (weight loss is a negative number in database)
-           and get rid of '-' when it is displayed -->
-          {{ -weight.weightDiff }}
-          <span>kg</span>
-        </q-item-label>
+        <q-card-section>
+          <div>CHANGE</div>
+          <q-separator/>
+          <div class="content">
+            <div v-if="weights.length > 0 && weights[0].weightDiff > 0" class="text-negative flex items-center">
+              <q-icon name="north"/>
+              <!-- turn the string into a number to get rid of the zero after coma Ex: 35.0 -> 35 -->
+              <div> {{ +weights[0].weightDiff }} kg</div>
+            </div>
 
-        <q-item-label v-else class="q-pl-xs same"> 0 <span>kg</span></q-item-label>
-      </q-item-section>
-    </q-item>
+            <div v-else-if="weights.length > 0 && weights[0].weightDiff < 0"
+                 class="text-secondary-400 flex items-center">
+              <q-icon name="south"/>
+              <!-- turn the string into a positive number (weight loss is a negative number in database)
+               and get rid of '-' when it is displayed -->
+              {{ -weights[0].weightDiff }} kg
+            </div>
 
-  </q-list>
+            <div v-else-if="weights.length > 0 && weights[0].weightDiff === 0" class="text-grey-5">
+              Same weight
+            </div>
+            <q-skeleton v-else class="bg-negative" type="rect"/>
+          </div>
+        </q-card-section>
 
+        <q-card-section>
+          <div>THIS WEEK</div>
+          <q-separator/>
+          <div class="content">
+            <div v-if="weights.length > 0 && thisWeekChange > 0" class=" text-negative flex items-center">
+              <q-icon name="north"/>
+              {{ +thisWeekChange }} kg
+            </div>
+
+            <div v-else-if="weights.length > 0 && thisWeekChange < 0" class=" text-secondary-400 flex items-center">
+              <q-icon name="south"/>
+              {{ -thisWeekChange }} kg
+            </div>
+
+            <div v-else-if="weights.length > 0 && thisWeekChange === 0" class="text-grey-5">
+              Same weight
+            </div>
+
+            <q-skeleton v-else class="bg-secondary" type="rect"/>
+          </div>
+        </q-card-section>
+
+        <q-card-section>
+          <div>THIS MONTH</div>
+          <q-separator/>
+          <div class="content">
+            <div v-if="weights.length > 0 && thisMonthChange > 0" class=" text-negative flex items-end">
+              <div class="flex align-items">
+                <q-icon name="north"/>
+                {{ +thisMonthChange }} kg
+              </div>
+            </div>
+
+            <div v-else-if="weights.length > 0 && thisMonthChange < 0" class=" text-secondary-400 flex items-center">
+              <q-icon name="south"/>
+              {{ -thisMonthChange }} kg
+            </div>
+
+            <div v-else-if="weights.length > 0 && thisMonthChange === 0" class="text-grey-5">
+              Same weight
+            </div>
+
+            <q-skeleton v-else class="bg-secondary" type="rect"/>
+          </div>
+        </q-card-section>
+
+        <q-card-section>
+          <div>THIS YEAR</div>
+          <q-separator/>
+          <div class="content">
+            <div v-if="weights.length > 0 && thisYearChange > 0" class=" text-negative flex items-end">
+              <div class="flex align-items">
+                <q-icon name="north"/>
+                {{ +thisYearChange }} kg
+              </div>
+            </div>
+
+            <div v-else-if="weights.length > 0 && thisYearChange < 0" class=" text-secondary-400 flex items-center">
+              <q-icon name="south"/>
+              {{ -thisYearChange }} kg
+            </div>
+
+            <div v-else-if="weights.length > 0 && thisYearChange === 0" class="text-grey-5">
+              Same weight
+            </div>
+
+            <q-skeleton v-else class="bg-secondary" type="rect"/>
+          </div>
+        </q-card-section>
+
+        <q-card-section>
+          <div>ALL TIME</div>
+          <q-separator class="q-my-sm"/>
+
+          <div class="content">
+            <div v-if="weights.length > 0 && allTimeChange > 0" class=" text-negative flex items-end">
+              <div class="flex align-items">
+                <q-icon name="north"/>
+                {{ +allTimeChange }} kg
+              </div>
+            </div>
+
+            <div v-else-if="weights.length > 0 && allTimeChange < 0" class=" text-secondary-400 flex items-center">
+              <q-icon name="south"/>
+              {{ -allTimeChange }} kg
+            </div>
+
+            <div v-else-if="weights.length > 0 && allTimeChange === 0" class="text-grey-5">
+              Same weight
+            </div>
+
+            <q-skeleton v-else class="bg-secondary" type="rect"/>
+          </div>
+        </q-card-section>
+      </q-card>
+
+      <q-card :flat="cardShadow" dark class="items-card">
+        <actions-modal
+          @closeUpdateModal="closeUpdateModal($event)"
+          action="update"
+          :weightData="updateWeightData"
+          :open="openUpdateModal"
+        />
+
+        <actions-modal
+          :addBtnVisible="true"
+          action="add"
+        />
+
+        <div class="title q-pa-none text-secondary lt-sm">
+          History
+        </div>
+
+        <q-card-section class="q-pa-none" v-if="weights.length > 0">
+          <q-list>
+            <q-item
+              v-for="weight in weights"
+              :key="weight"
+              class="no-padding q-mt-md shadow-5"
+              clickable
+              @click="onClick(weight)">
+              <q-item-section class="q-px-sm text-center text-white item-date text-weight-bold">
+                <q-item-label>{{ weight.date.getDate() }} {{ months[weight.date.getMonth()] }}</q-item-label>
+                <q-item-label>{{ weight.date.getFullYear() }}</q-item-label>
+              </q-item-section>
+
+              <q-item-section class="q-pl-sm text-white item-weight">
+                <q-item-label>{{ weight.weight }} <span>kg</span></q-item-label>
+              </q-item-section>
+
+              <q-item-section class="q-mr-md item-diff" side>
+                <q-item-label v-if="weight.weightDiff > 0" class="q-pl-xs text-negative flex items-end">
+                  <div class="flex">
+                    <q-icon name="north"/>
+                    <!-- turn the string into a number to get rid of the zero after coma Ex: 35.0 -> 35 -->
+                    {{ +weight.weightDiff }}
+                  </div>
+                  <span>kg</span>
+                </q-item-label>
+
+                <q-item-label v-else-if="weight.weightDiff < 0" class="q-pl-xs text-secondary flex items-center">
+                  <q-icon name="south"/>
+                  <!-- turn the string into a positive number (weight loss is a negative number in database)
+                   and get rid of '-' when it is displayed -->
+                  {{ -weight.weightDiff }}
+                  <span>kg</span>
+                </q-item-label>
+
+                <q-item-label v-else class="q-pl-xs"> 0 <span>kg</span></q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-card-section>
+
+        <q-card-section v-else class="items-skeleton">
+          <div class="bg-primary-200 full-width flex items-center">
+            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
+            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
+            <q-space/>
+            <q-skeleton class="bg-secondary q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
+          </div>
+          <div class="bg-primary-200 full-width flex items-center">
+            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
+            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
+            <q-space/>
+            <q-skeleton class="bg-secondary q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
+          </div>
+          <div class="bg-primary-200 full-width flex items-center">
+            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
+            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
+            <q-space/>
+            <q-skeleton class="bg-negative q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
+          </div>
+          <div class="bg-primary-200 full-width flex items-center">
+            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
+            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
+            <q-space/>
+            <q-skeleton class="bg-secondary q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
+          </div>
+          <div class="bg-primary-200 full-width flex items-center">
+            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
+            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
+            <q-space/>
+            <q-skeleton class="bg-negative q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
+          </div>
+          <div class="bg-primary-200 full-width flex items-center">
+            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
+            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
+            <q-space/>
+            <q-skeleton class="bg-negative q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
+          </div>
+          <div class="bg-primary-200 full-width flex items-center">
+            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
+            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
+            <q-space/>
+            <q-skeleton class="bg-secondary q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
+          </div>
+          <div class="bg-primary-200 full-width flex items-center">
+            <q-skeleton class="bg-secondary" type="rect" height="5rem" width="5rem"></q-skeleton>
+            <q-skeleton class="q-ml-md" type="rect" height="1.5rem" width="4.5rem"></q-skeleton>
+            <q-space/>
+            <q-skeleton class="bg-negative q-mr-md" type="rect" height="1.5rem" width="4.2rem"></q-skeleton>
+          </div>
+        </q-card-section>
+      </q-card>
+    </div>
+  </q-page>
 </template>
 
 <script>
 import {defineComponent} from 'vue';
 import {mapGetters} from "vuex";
+import {useQuasar} from "quasar";
 
 export default defineComponent({
   data() {
@@ -78,7 +269,47 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapGetters('myStore', ['weights'])
+    ...mapGetters('myStore', ['weights']),
+    // remove shadow of card on smaller screens
+    cardShadow: () => useQuasar().screen.lt.sm,
+    thisWeekChange() {
+      const mostRecentWeight = this.weights[0]
+      const oneWeekAgo = new Date(new Date(new Date().setDate(new Date().getDate() - 7)).setHours(0, 0, 0, 0))
+      let firstWeightOneWeekAgo
+      this.weights.some(weight => {
+        if (oneWeekAgo.getTime() <= weight.date.getTime()) {
+          firstWeightOneWeekAgo = weight
+        }
+      })
+      return parseFloat((mostRecentWeight.weight - firstWeightOneWeekAgo.weight).toFixed(1))
+    },
+    thisMonthChange() {
+      const mostRecentWeight = this.weights[0]
+      const oneMonthAgo = new Date(new Date(new Date().setMonth(new Date().getMonth() - 1)).setHours(0, 0, 0, 0))
+      let firstWeightOneMonthAgo
+      this.weights.some(weight => {
+        if (oneMonthAgo.getTime() <= weight.date.getTime()) {
+          firstWeightOneMonthAgo = weight
+        }
+      })
+      return parseFloat((mostRecentWeight.weight - firstWeightOneMonthAgo.weight).toFixed(1))
+    },
+    thisYearChange() {
+      const mostRecentWeight = this.weights[0]
+      const oneYearAgo = new Date(new Date(new Date().setFullYear(new Date().getFullYear() - 1)).setHours(0, 0, 0, 0))
+      let firstWeightOneYearAgo
+      this.weights.some(weight => {
+        if (oneYearAgo.getTime() <= weight.date.getTime()) {
+          firstWeightOneYearAgo = weight
+        }
+      })
+      return parseFloat((mostRecentWeight.weight - firstWeightOneYearAgo.weight).toFixed(1))
+    },
+    allTimeChange() {
+      const mostRecentWeight = this.weights[0]
+      const firstWeightAllTime = this.weights[this.weights.length - 1]
+      return parseFloat((mostRecentWeight.weight - firstWeightAllTime.weight).toFixed(1))
+    }
   },
   components: {
     'actions-modal': require('components/ActionsModal').default
@@ -87,59 +318,222 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.q-list {
-  padding-bottom: 6rem;
+.q-page {
+  padding: 1rem;
 
-  .history-title {
-    font-size: 1.8rem;
+  .stats-card {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(10px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+    background-color: transparent;
+
+    & > * {
+      font-weight: bold;
+      font-size: 1rem;
+      color: $secondary;
+      background-color: $primary-400;
+
+      .q-separator {
+        margin: 0.8rem 0;
+        background-color: $grey-9;
+      }
+
+      .content {
+        font-weight: normal;
+        font-size: 1.1rem;
+
+        .q-icon {
+          font-size: 1.2rem;
+        }
+
+        .q-skeleton {
+          width: 5rem;
+        }
+      }
+    }
   }
 
-  .q-item {
-    background: $primary-400;
+  .items-card {
+    background-color: transparent;
 
-    .item-date {
-      max-width: 5rem;
-      font-size: 1.1rem;
-      background: $secondary;
+    .title {
+      font-size: 1.8rem;
     }
 
-    .item-weight {
-      font-size: 1.5rem;
+    .q-list {
+      padding-bottom: 6rem;
 
-      span {
-        font-size: 0.9rem;
+      .q-item {
+        background: $primary-400;
+
+        .item-date {
+          max-width: 5rem;
+          font-size: 1.1rem;
+          background: $secondary;
+        }
+
+        .item-weight {
+          font-size: 1.5rem;
+
+          span {
+            font-size: 0.9rem;
+          }
+        }
+
+        .item-diff {
+          font-size: 1.3rem;
+
+          span {
+            padding-left: 0.2rem;
+            font-size: 1.2rem;
+          }
+        }
+
+        &:hover {
+          background: $primary-200;
+        }
       }
     }
 
-    .item-diff {
-      font-size: 1.3rem;
+    .items-skeleton {
+      padding: 0;
 
-      span {
-        padding-left: 0.2rem;
-        font-size: 1.2rem;
+      & > div {
+        margin-top: 1rem;
       }
-    }
-
-    &:hover {
-      background: $primary-200;
     }
   }
 }
 
 @media (min-width: $breakpoint-sm-min) {
-  .q-list {
-    max-width: 40rem;
-    padding: 1.5rem 3rem 2.5rem 3rem;
+  .q-page {
+    padding: 2rem;
 
-    .q-item {
-      background: $primary-400;
+    .stats-card {
+      background-color: $primary-400;
+      gap: 2rem;
+      height: 100%;
+      padding: 2rem;
 
-      .item-date {
-        max-width: 5.5rem;
+      & > * {
         font-size: 1.2rem;
+        background-color: $primary-200;
+
+        .q-separator {
+          background-color: $grey-8;
+        }
+
+        .content {
+          font-size: 1.3rem;
+
+          .q-icon {
+            font-size: 1.3rem;
+          }
+        }
+      }
+    }
+
+    .items-card {
+      background-color: $primary-400;
+
+      .q-list {
+        padding: 1rem 2rem 2.5rem 2rem;
+
+        .q-item {
+          background: $primary-200;
+
+          .item-date {
+            max-width: 5.5rem;
+            font-size: 1.2rem;
+          }
+        }
+      }
+
+      .items-skeleton {
+        padding: 1rem 2rem 2.5rem 2rem;
       }
     }
   }
 }
 
+@media (min-width: $breakpoint-md-min) {
+  .q-page {
+    padding: 1rem;
+
+    .wrapper {
+      display: flex;
+      flex-flow: row-reverse;
+
+      & > * {
+        flex-grow: 1;
+        flex-basis: 0;
+      }
+
+      .stats-card {
+        margin-left: 0.5rem;
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .items-card {
+        margin-right: 0.5rem;
+
+        .q-list {
+          padding: 0 1rem 1rem 1rem;
+
+          .q-item {
+            height: 4rem;
+
+            .item-date {
+              max-width: 4.7rem;
+              font-size: 1rem;
+              background: $secondary;
+            }
+          }
+        }
+
+        .items-skeleton {
+          padding: 0 1rem 1rem 1rem;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: $breakpoint-lg-min) {
+  .q-page {
+    padding: 3rem;
+
+    .wrapper {
+      .stats-card {
+        margin-left: 1.5rem;
+        gap: 2rem;
+        padding: 2rem;
+      }
+
+      .items-card {
+        margin-right: 1.5rem;
+
+        .q-list {
+          padding: 0 3rem 3rem 3rem;
+
+          .q-item {
+            height: 5rem;
+
+            .item-date {
+              max-width: 5rem;
+              font-size: 1.2rem;
+              background: $secondary;
+            }
+          }
+        }
+
+        .items-skeleton {
+          padding: 0 3rem 3rem 3rem;
+        }
+      }
+    }
+  }
+}
 </style>

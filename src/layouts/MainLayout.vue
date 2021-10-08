@@ -18,7 +18,6 @@
     </q-header>
 
     <q-drawer
-      dark
       show-if-above
       v-model="drawer"
       :breakpoint="1023"
@@ -159,6 +158,7 @@ export default {
 }
 
 .q-drawer {
+  background-color: $primary-400;
   .q-img {
     .avatar-texts {
       padding-bottom: 0.3rem;
