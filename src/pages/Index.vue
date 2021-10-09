@@ -590,6 +590,10 @@ export default defineComponent({
         margin-left: 0.5rem;
         gap: 1rem;
         padding: 1rem;
+
+        & > * {
+          font-size: 1.1rem;
+        }
       }
 
       .items-card {
@@ -636,6 +640,10 @@ export default defineComponent({
         margin-left: 1.5rem;
         gap: 2rem;
         padding: 2rem;
+
+        & > * {
+          font-size: 1.2rem;
+        }
       }
 
       .items-card {

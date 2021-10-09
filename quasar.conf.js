@@ -145,8 +145,8 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `InfinityWeight`,
-        short_name: `InfinityWeight`,
+        name: `Infinity Weight`,
+        short_name: `Infinity Weight`,
         description: `A Quasar Framework app`,
         display: 'standalone',
         orientation: 'portrait',
@@ -173,11 +173,6 @@ module.exports = configure(function (ctx) {
             sizes: '384x384',
             type: 'image/png'
           },
-          {
-            src: 'icons/icon-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
-          }
         ]
       }
     },

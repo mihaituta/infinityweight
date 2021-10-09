@@ -2,8 +2,12 @@
   <q-layout view="lHh Lpr fFf" class="bg-primary">
     <q-header class="bg-primary-400" elevated>
       <q-toolbar>
-        <q-toolbar-title class="navbar-title text-secondary q-ml-md text-weight-bold">
-          InfinityWeight
+        <q-avatar square>
+          <q-img src="../../public/icons/favicon-128x128.png"/>
+        </q-avatar>
+
+        <q-toolbar-title class="navbar-title text-secondary">
+          Infinity Weight
         </q-toolbar-title>
 
         <div class="text-secondary text-h5 text-weight-bold gt-xs lt-md"> {{ pageTitle }}</div>
@@ -36,7 +40,7 @@
             v-ripple
             to="/"
             exact
-            active-class="my-menu-link"
+            active-class="menu-link"
             @click="setPageTitle('Home')"
           >
             <q-item-section avatar>
@@ -53,7 +57,7 @@
             v-ripple
             to="/calendar"
             exact
-            active-class="my-menu-link"
+            active-class="menu-link"
             @click="setPageTitle('Calendar')"
           >
             <q-item-section avatar>
@@ -70,7 +74,7 @@
             v-ripple
             to="/chart"
             exact
-            active-class="my-menu-link"
+            active-class="menu-link"
             @click="setPageTitle('Chart')"
           >
             <q-item-section avatar>
@@ -129,7 +133,7 @@ export default {
   data() {
     return {
       drawer: false,
-      pageTitle: '',
+      pageTitle: 'Home',
       link: '/'
     }
   },
@@ -149,8 +153,21 @@ export default {
 </script>
 
 <style lang="scss">
-.navbar-title {
-  font-size: 1.6rem;
+.q-header {
+  .q-toolbar {
+    padding-right: 0;
+    padding-left: 1rem;
+
+    .q-avatar {
+      font-size: 1.7rem;
+    }
+
+    .navbar-title {
+      padding-right: 0;
+      font-size: 1.6rem;
+      font-weight: bold;
+    }
+  }
 }
 
 .q-drawer {
@@ -165,29 +182,56 @@ export default {
       }
     }
   }
-}
 
-.q-item {
-  height: 5rem;
-  padding: 0 2rem 0 2rem;
+  .q-item {
+    height: 5rem;
+    padding: 0 2rem 0 2rem;
 
-  &:hover {
-    color: $primary;
-    background: $secondary-300;
+    &:hover {
+      color: $primary;
+      background: $secondary-300;
+    }
+
+    .menu-link {
+      color: $primary;
+      background: $secondary;
+    }
   }
 }
 
-.my-menu-link {
-  color: $primary;
-  background: $secondary;
+@media (min-width: $breakpoint-sm-min) {
+  .q-header {
+    .q-toolbar {
+      .q-avatar {
+        font-size: 2rem;
+      }
+
+      .navbar-title {
+        font-size: 1.8rem;
+      }
+    }
+  }
 }
 
 @media (min-width: $breakpoint-md-min) {
   .q-header {
     padding: 0.6rem 0;
 
-    .navbar-title {
-      font-size: 2rem;
+    .q-toolbar {
+      .q-avatar {
+        font-size: 2rem;
+      }
+
+    }
+  }
+}
+
+@media (min-width: $breakpoint-lg-min) {
+  .q-header {
+    .q-toolbar {
+      .q-avatar {
+        font-size: 2.1rem;
+      }
     }
   }
 }
