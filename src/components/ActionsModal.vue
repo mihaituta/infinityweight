@@ -237,5 +237,7 @@ export default {
   .block {
     padding-right: 0.3rem;
   }
+
+
 }
 </style>

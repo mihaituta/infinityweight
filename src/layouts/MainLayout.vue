@@ -22,10 +22,11 @@
     </q-header>
 
     <q-drawer
+      class="bg-primary-400"
       show-if-above
       v-model="drawer"
       :breakpoint="1023"
-      bordered
+      elevated
       no-swipe-open
       no-swipe-close
       no-swipe-backdrop
@@ -152,7 +153,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .q-header {
   .q-toolbar {
     padding-right: 0;

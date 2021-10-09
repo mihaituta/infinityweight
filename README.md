@@ -1,26 +1,47 @@
-# InfinityWeight (infinityweight)
+<h1 align="center">
+  <img src="https://user-images.githubusercontent.com/41682806/136675195-7eae6e82-9163-4c0a-bf14-9e3411812de9.png"/><br/>
+</h1>
 
-A Quasar Framework app
+# Infinity Weight
+**Infinity Weight** is an application I made for tracking my weight during my weight loss journey.
 
-## Install the dependencies
-```bash
+<a href="https://infinityweight.netlify.app" rel="noreferrer" target="_blank">Live demo</a>
+
+Demo account: demo@gmail.com, password: 123123.
+<br>
+
+# Technologies
+- **HTML**
+- **CSS**
+- **Sass**
+- **JavaScript**
+- **Vue.js**
+- **Quasar**
+- **Firebase**
+- Hosted on **Netlify**
+
+# Functionalities
+Users have to create an account to have their data saved in the database.
+
+The website has 3 main pages:
+- **Home**, has 2 sections:
+  - **History** displays all weights as a list where users can **add, delete, update** and **search** weights by date.
+  - **Status** displays stats like **current weight** and the **weight lost** in the **last week, month, year** or **since the begining.**
+- **Calendar**, here the user can also **add, update** and **delete** weights directly on the calendar, the weight and that day's change are also displayed under each respective date.
+- **Chart**, here the user can see on a chart how they progressed in the **last week, month, 6 months, year to date**, or **since the beginning.**
+
+When a weight is **added, updated** or **deleted**, the weight update difference between the other dates is also recalculated each time.
+
+# Installation
+
+**Project setup:**
+```
 npm install
 ```
-
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
+**Start local server:**
+```
 quasar dev
 ```
 
-### Lint the files
-```bash
-npm run lint
-```
-
-### Build the app for production
-```bash
-quasar build
-```
-
-### Customize the configuration
-See [Configuring quasar.conf.js](https://v2.quasar.dev/quasar-cli/quasar-conf-js).
+## Contact
+tutamihai@gmail.com

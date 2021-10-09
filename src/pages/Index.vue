@@ -464,6 +464,7 @@ export default defineComponent({
       }
 
       .q-item {
+        height: 5rem;
         background: $primary-400;
 
         .item-date {
