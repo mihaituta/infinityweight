@@ -1,7 +1,6 @@
 <template>
   <q-page>
     <div class="wrapper">
-
       <q-card :flat="cardShadow" dark class="stats-card">
         <q-card-section>
           <div>CURRENT</div>
@@ -175,6 +174,7 @@
               <q-icon name="search"/>
             </template>
           </q-input>
+
         </q-card-section>
 
         <q-card-section v-if="loadingStatus" class="items-skeleton">
@@ -245,45 +245,45 @@
               enter-active-class="animated fadeInRight"
               leave-active-class="animated fadeOutRight"
             >
-              <q-item
-                v-for="(weight, index) in filteredWeights"
-                :key="index"
-                class="no-padding q-mt-md shadow-5"
-                clickable
-                @click="onClick(weight)">
-                <q-item-section class="q-px-sm text-center text-white item-date text-weight-bold">
-                  <q-item-label>{{ weight.date.getDate() }} {{ months[weight.date.getMonth()] }}</q-item-label>
-                  <q-item-label>{{ weight.date.getFullYear() }}</q-item-label>
-                </q-item-section>
+              <div v-for="(weight, index) in filteredWeights" :key="index">
 
-                <q-item-section class="q-pl-sm text-white item-weight">
-                  <q-item-label>{{ weight.weight }} <span>kg</span></q-item-label>
-                </q-item-section>
+                <div class="group-month-year text-secondary">
+                  {{ groupMonthYear(weight, index) }}
+                </div>
 
-                <q-item-section class="q-mr-md item-diff" side>
-                  <q-item-label v-if="weight.weightDiff > 0" class="q-pl-xs text-negative flex items-end">
-                    <div class="flex">
-                      <q-icon name="north"/>
-                      <!-- turn the string into a number to get rid of the zero after coma Ex: 35.0 -> 35 -->
-                      {{ +weight.weightDiff }}
-                    </div>
-                    <span>kg</span>
-                  </q-item-label>
+                <q-item class="no-padding q-mt-md shadow-5" clickable @click="onClick(weight)">
+                  <q-item-section class="q-px-sm text-center text-white item-date text-weight-bold">
+                    <q-item-label>{{ weight.date.getDate() }} {{ months[weight.date.getMonth()] }}</q-item-label>
+                    <q-item-label>{{ weight.date.getFullYear() }}</q-item-label>
+                  </q-item-section>
 
-                  <q-item-label v-else-if="weight.weightDiff < 0" class="q-pl-xs text-secondary flex items-center">
-                    <q-icon name="south"/>
-                    <!-- turn the string into a positive number (weight loss is a negative number in database)
-                     and get rid of '-' when it is displayed -->
-                    {{ -weight.weightDiff }}
-                    <span>kg</span>
-                  </q-item-label>
+                  <q-item-section class="q-pl-sm text-white item-weight">
+                    <q-item-label>{{ weight.weight }} <span>kg</span></q-item-label>
+                  </q-item-section>
 
-                  <q-item-label v-else class="q-pl-xs"> 0 <span>kg</span></q-item-label>
-                </q-item-section>
-              </q-item>
+                  <q-item-section class="q-mr-md item-diff" side>
+                    <q-item-label v-if="weight.weightDiff > 0" class="q-pl-xs text-negative flex items-end">
+                      <div class="flex">
+                        <q-icon name="north"/>
+                        <!-- turn the string into a number to get rid of the zero after coma Ex: 35.0 -> 35 -->
+                        {{ +weight.weightDiff }}
+                      </div>
+                      <span>kg</span>
+                    </q-item-label>
+
+                    <q-item-label v-else-if="weight.weightDiff < 0" class="q-pl-xs text-secondary flex items-center">
+                      <q-icon name="south"/>
+                      <!-- turn the string into a positive number (weight loss is a negative number in database)
+                       and get rid of '-' when it is displayed -->
+                      {{ -weight.weightDiff }}
+                      <span>kg</span>
+                    </q-item-label>
+
+                    <q-item-label v-else class="q-pl-xs"> 0 <span>kg</span></q-item-label>
+                  </q-item-section>
+                </q-item>
+              </div>
             </transition-group>
-
-
           </q-list>
         </q-card-section>
       </q-card>
@@ -295,16 +295,15 @@
 import {defineComponent} from 'vue';
 import {mapGetters} from "vuex";
 import {date, useQuasar} from "quasar";
-import ActionsModal from "components/ActionsModal";
 
 export default defineComponent({
   data() {
     return {
-      months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
+      months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
+      monthsComplete: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
       openUpdateModal: false,
       updateWeightData: {},
-      searchDate: ''
+      searchDate: '',
     }
   },
   methods: {
@@ -314,11 +313,18 @@ export default defineComponent({
     },
     closeUpdateModal() {
       this.openUpdateModal = false
-    }
+    },
+    groupMonthYear(weight, index) {
+      const monthYear = this.monthsComplete[weight.date.getMonth()] + ' ' + weight.date.getFullYear()
+      if (index === 0) {
+        return monthYear
+      } else if (weight.date.getMonth() !== this.weights[index - 1].date.getMonth()) {
+        return monthYear
+      }
+    },
   },
   computed: {
     ...mapGetters('myStore', ['weights', 'loadingStatus']),
-
     filteredWeights() {
       if (this.searchDate)
         return this.weights.filter(weight => {
@@ -329,8 +335,10 @@ export default defineComponent({
       else
         return this.weights
     },
+
     // remove shadow of card on smaller screens
     cardShadow: () => useQuasar().screen.lt.sm,
+
     thisWeekChange() {
       const mostRecentWeight = this.weights[0]
       const oneWeekAgo = new Date(new Date(new Date().setDate(new Date().getDate() - 7)).setHours(0, 0, 0, 0))
@@ -342,6 +350,7 @@ export default defineComponent({
       })
       return parseFloat((mostRecentWeight.weight - firstWeightOneWeekAgo.weight).toFixed(1))
     },
+
     thisMonthChange() {
       const mostRecentWeight = this.weights[0]
       const oneMonthAgo = new Date(new Date(new Date().setMonth(new Date().getMonth() - 1)).setHours(0, 0, 0, 0))
@@ -353,6 +362,7 @@ export default defineComponent({
       })
       return parseFloat((mostRecentWeight.weight - firstWeightOneMonthAgo.weight).toFixed(1))
     },
+
     thisYearChange() {
       const mostRecentWeight = this.weights[0]
       const oneYearAgo = new Date(new Date(new Date().setFullYear(new Date().getFullYear() - 1)).setHours(0, 0, 0, 0))
@@ -364,6 +374,7 @@ export default defineComponent({
       })
       return parseFloat((mostRecentWeight.weight - firstWeightOneYearAgo.weight).toFixed(1))
     },
+
     allTimeChange() {
       const mostRecentWeight = this.weights[0]
       const firstWeightAllTime = this.weights[this.weights.length - 1]
@@ -371,7 +382,6 @@ export default defineComponent({
     }
   },
   components: {
-    ActionsModal,
     'actions-modal': require('components/ActionsModal').default
   }
 })
@@ -386,7 +396,7 @@ export default defineComponent({
     display: grid;
     grid-template-columns: repeat(2, minmax(10px, 1fr));
     gap: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
     background-color: transparent;
 
     & > * {
@@ -423,8 +433,9 @@ export default defineComponent({
       padding: 0;
 
       .title {
+        font-weight: bold;
         font-size: 1.8rem;
-        margin-bottom: 0.5rem;
+        margin-bottom: 1rem;
       }
 
       .search-input {
@@ -435,8 +446,10 @@ export default defineComponent({
     .q-list {
       padding-bottom: 6rem;
 
-      .q-input {
-        font-size: 1rem;
+      .group-month-year {
+        font-size: 1.6rem;
+        font-weight: bold;
+        margin-top: 1rem;
       }
 
       .not-found {
@@ -532,12 +545,16 @@ export default defineComponent({
         }
 
         & > :nth-child(3) {
-          margin-bottom: 1rem;
+          margin-bottom: 1.7rem;
         }
       }
 
       .q-list {
         padding: 0 2rem 2.5rem 2rem;
+
+        .group-month-year {
+          font-size: 1.5rem;
+        }
 
         .q-item {
           background: $primary-200;
@@ -586,6 +603,11 @@ export default defineComponent({
         .q-list {
           padding: 0 1rem 1rem 1rem;
 
+          .group-month-year {
+            font-size: 1.4rem;
+            margin-top: 1rem;
+          }
+
           .q-item {
             height: 4rem;
 
@@ -626,6 +648,10 @@ export default defineComponent({
 
         .q-list {
           padding: 0 3rem 3rem 3rem;
+
+          .group-month-year {
+            font-size: 1.5rem;
+          }
 
           .q-item {
             height: 5rem;

@@ -104,8 +104,8 @@
       </q-scroll-area>
 
       <q-img class="absolute-top" src="../assets/avatar-bg2.jpg" style="height: 200px">
-        <div class="avatar-texts q-mx-lg q-mt-xs  full-height bg-transparent">
-          <q-avatar size="130px" class="q-mb-sm">
+        <div class="avatar-texts q-mx-lg q-mt-xs full-height bg-transparent">
+          <q-avatar size="130px" class="q-mb-xs">
             <img src="../assets/avatar.jpg" alt="avatar_img"/>
           </q-avatar>
           <div v-if="userDetails.email" class="avatar-mail text-weight-bold">
@@ -161,10 +161,6 @@ export default {
       padding-bottom: 0.3rem;
 
       .avatar-mail {
-        font-size: 1.3rem;
-      }
-
-      .avatar-name {
         font-size: 1.4rem;
       }
     }
