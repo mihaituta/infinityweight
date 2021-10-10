@@ -1,16 +1,12 @@
 <template>
   <q-layout view="lHh Lpr fFf" class="bg-primary">
     <q-header class="bg-primary-400" elevated>
-      <q-toolbar>
-        <q-avatar square>
-          <q-img src="../../public/icons/favicon-128x128.png"/>
-        </q-avatar>
+      <electron-toolbar/>
+      <q-toolbar class="bg-primary-400 electron-hide">
+        <toolbar-title/>
 
-        <q-toolbar-title class="navbar-title text-secondary">
-          Infinity Weight
-        </q-toolbar-title>
-
-        <div class="text-secondary text-h5 text-weight-bold gt-xs lt-md"> {{ pageTitle }}</div>
+        <q-space/>
+        <div class="menu-label text-secondary text-weight-bold gt-xs lt-md"> {{ pageTitle }}</div>
         <q-btn
           class="text-h5 lt-md text-secondary"
           flat
@@ -139,16 +135,20 @@ export default {
     }
   },
   methods: {
+    ...mapActions('myStore', ['logoutUser']),
     toggleDrawer() {
       this.drawer = !this.drawer
     },
     setPageTitle(title) {
       this.pageTitle = title
     },
-    ...mapActions('myStore', ['logoutUser'])
   },
   computed: {
     ...mapState('myStore', ['userDetails']),
+  },
+  components: {
+    'electron-toolbar': require('components/ElectronToolbar').default,
+    'toolbar-title': require('components/ToolbarTitle').default
   },
 }
 </script>
@@ -158,16 +158,18 @@ export default {
   .q-toolbar {
     padding-right: 0;
     padding-left: 1rem;
+  }
 
-    .q-avatar {
-      font-size: 1.7rem;
-    }
+  .navbar-title {
+    padding-left: 0.8rem;
+    padding-right: 0;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: $secondary;
+  }
 
-    .navbar-title {
-      padding-right: 0;
-      font-size: 1.6rem;
-      font-weight: bold;
-    }
+  .q-avatar {
+    font-size: 1.7rem;
   }
 }
 
@@ -202,37 +204,44 @@ export default {
 
 @media (min-width: $breakpoint-sm-min) {
   .q-header {
-    .q-toolbar {
-      .q-avatar {
-        font-size: 2rem;
-      }
+    .q-avatar {
+      font-size: 2rem;
+    }
 
-      .navbar-title {
-        font-size: 1.8rem;
-      }
+    .navbar-title {
+      font-size: 1.8rem;
+    }
+
+    .menu-label {
+      font-size: 1.8rem;
     }
   }
 }
 
 @media (min-width: $breakpoint-md-min) {
   .q-header {
-    padding: 0.6rem 0;
-
     .q-toolbar {
-      .q-avatar {
-        font-size: 2rem;
-      }
+      padding: 0.9rem 0 0.9rem 1rem;
+    }
 
+    .q-avatar {
+      font-size: 2rem;
     }
   }
 }
 
 @media (min-width: $breakpoint-lg-min) {
   .q-header {
+    .q-bar {
+      padding: 2.3rem 1.2rem 2.3rem 1.5rem;
+    }
+
     .q-toolbar {
-      .q-avatar {
-        font-size: 2.1rem;
-      }
+      padding-left: 1.5rem;
+    }
+
+    .q-avatar {
+      font-size: 2.1rem;
     }
   }
 }

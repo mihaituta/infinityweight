@@ -20,6 +20,8 @@ Demo account: demo@gmail.com, password: 123123.
 - **Firebase**
 - Hosted on **Netlify**
 
+I chose **Quasar** because I wanted to use web technologies to create the app and use it on **mobile** and **desktop** as apps, and **Quasar** allows deployment on every major platform such as **web, android, ios, mac** and **desktop(electron)** from the same source code.
+
 # Functionalities
 Users have to create an account to have their data saved in the database.
 

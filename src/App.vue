@@ -10,6 +10,7 @@ export default defineComponent({
     ...mapActions('myStore',['handleAuthStateChanged'])
   },
   mounted() {
+
     this.handleAuthStateChanged()
   },
 })

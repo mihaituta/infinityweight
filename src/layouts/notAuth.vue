@@ -1,10 +1,10 @@
 <template>
   <q-layout view="lHh Lpr fFf" class="bg-primary">
     <q-header class="q-py-sm bg-primary-400" elevated>
-      <q-toolbar>
-        <q-toolbar-title class="text-secondary text-h5 q-ml-md text-weight-bold">
-          InfinityWeight
-        </q-toolbar-title>
+      <electron-toolbar/>
+
+      <q-toolbar class="electron-hide">
+        <toolbar-title/>
       </q-toolbar>
     </q-header>
     <q-page-container>
@@ -16,7 +16,11 @@
 
 <script>
 export default {
-  name: "notAuth"
+  name: "notAuth",
+  components: {
+    'electron-toolbar': require('components/ElectronToolbar').default,
+    'toolbar-title': require('components/ToolbarTitle').default
+  },
 }
 </script>
 

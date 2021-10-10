@@ -187,7 +187,7 @@ const actions = {
           console.log(err)
         }
         if (this.$router.currentRoute.value.name === 'auth') {
-          await this.$router.replace('/')
+          await this.$router.push('/')
         }
       } else {
         // User is logged out
