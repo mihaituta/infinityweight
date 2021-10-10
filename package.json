@@ -1,8 +1,8 @@
 {
   "name": "infinityweight",
   "version": "0.0.1",
-  "description": "A Quasar Framework app",
-  "productName": "InfinityWeight",
+  "description": "Weight tracker app by Mihai Tuță",
+  "productName": "Infinity Weight",
   "author": "Mihai Tuță <tutamihai@gmail.com>",
   "private": true,
   "scripts": {

@@ -1,11 +1,14 @@
 <template>
-  <q-avatar square>
-    <q-img src="../../public/icons/favicon-128x128.png"/>
-  </q-avatar>
 
-  <div class="navbar-title">
-    Infinity Weight
-  </div>
+  <RouterLink to="/" class="link flex items-center q-electron-drag--exception">
+    <q-avatar square>
+      <q-img src="../../public/icons/favicon-128x128.png"/>
+    </q-avatar>
+    <div class="navbar-title">
+      Infinity Weight
+    </div>
+  </RouterLink>
+
 </template>
 
 <script>
@@ -15,6 +18,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.link {
+  text-decoration: inherit;
+}
+
+.q-avatar {
+  font-size: 1.7rem;
+}
+
 .navbar-title {
   margin-left: 0;
   padding-left: 0.8rem;
@@ -22,10 +34,6 @@ export default {
   font-size: 1.6rem;
   font-weight: bold;
   color: $secondary;
-}
-
-.q-avatar {
-  font-size: 1.7rem;
 }
 
 @media (min-width: $breakpoint-sm-min) {

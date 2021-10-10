@@ -147,7 +147,7 @@ module.exports = configure(function (ctx) {
       manifest: {
         name: `Infinity Weight`,
         short_name: `Infinity Weight`,
-        description: `A Quasar Framework app`,
+        description: `Weight tracker app by Mihai Tuță`,
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
