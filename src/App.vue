@@ -1,4 +1,4 @@
-<template >
+<template>
   <router-view/>
 </template>
 <script>
@@ -7,11 +7,11 @@ import {mapActions} from 'vuex';
 
 export default defineComponent({
   methods: {
-    ...mapActions('myStore',['handleAuthStateChanged'])
+    ...mapActions('myStore', ['handleAuthStateChanged'])
   },
   mounted() {
-
     this.handleAuthStateChanged()
   },
 })
+
 </script>

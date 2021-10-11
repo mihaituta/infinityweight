@@ -1,125 +1,126 @@
 <template>
   <q-layout view="lHh Lpr fFf" class="bg-primary">
-    <q-header class="bg-primary-400" elevated>
-      <electron-toolbar/>
-      <q-toolbar class="bg-primary-400 electron-hide">
-        <toolbar-title/>
-
-        <q-space/>
-        <div class="menu-label text-secondary text-weight-bold gt-xs lt-md"> {{ pageTitle }}</div>
-        <q-btn
-          class="text-h5 lt-md text-secondary"
-          flat
-          round
-          icon="menu"
-          @click="toggleDrawer"
-        />
-      </q-toolbar>
-    </q-header>
-
-    <q-drawer
-      class="bg-primary-400"
-      show-if-above
-      v-model="drawer"
-      :breakpoint="1023"
-      elevated
-      no-swipe-open
-      no-swipe-close
-      no-swipe-backdrop
-    >
-      <q-scroll-area
-        style="height: calc(100% - 200px); margin-top: 200px;"
-        class="relative-position text-h6 text-weight-bold"
-      >
-        <q-list class="text-secondary no-padding">
-          <q-item
-            clickable
-            v-ripple
-            to="/"
-            exact
-            active-class="menu-link"
-            @click="setPageTitle('Home')"
-          >
-            <q-item-section avatar>
-              <q-icon name="home"/>
-            </q-item-section>
-
-            <q-item-section>
-              Home
-            </q-item-section>
-          </q-item>
-
-          <q-item
-            clickable
-            v-ripple
-            to="/calendar"
-            exact
-            active-class="menu-link"
-            @click="setPageTitle('Calendar')"
-          >
-            <q-item-section avatar>
-              <q-icon name="edit_calendar"/>
-            </q-item-section>
-
-            <q-item-section>
-              Calendar
-            </q-item-section>
-          </q-item>
-
-          <q-item
-            clickable
-            v-ripple
-            to="/chart"
-            exact
-            active-class="menu-link"
-            @click="setPageTitle('Chart')"
-          >
-            <q-item-section avatar>
-              <q-icon name="bar_chart"/>
-            </q-item-section>
-
-            <q-item-section>
-              Chart
-            </q-item-section>
-          </q-item>
+    <q-pull-to-refresh @refresh="refresh" no-mouse color="primary" bg-color="secondary">
+      <q-header class="bg-primary-400" elevated>
+        <electron-toolbar/>
+        <q-toolbar class="bg-primary-400 electron-hide">
+          <toolbar-title/>
 
           <q-space/>
+          <div class="menu-label text-secondary text-weight-bold gt-xs lt-md"> {{ pageTitle }}</div>
+          <q-btn
+            class="text-h5 lt-md text-secondary"
+            flat
+            round
+            icon="menu"
+            @click="toggleDrawer"
+          />
+        </q-toolbar>
+      </q-header>
 
-          <q-item
-            clickable
-            v-ripple
-            v-if="userDetails.userId"
-            @click="logoutUser"
-            class="absolute-bottom logout-btn"
-          >
-            <q-item-section avatar>
-              <q-icon name="logout"/>
-            </q-item-section>
+      <q-drawer
+        class="bg-primary-400"
+        show-if-above
+        v-model="drawer"
+        :breakpoint="1023"
+        elevated
+        no-swipe-open
+        no-swipe-close
+        no-swipe-backdrop
+      >
+        <q-scroll-area
+          style="height: calc(100% - 200px); margin-top: 200px;"
+          class="relative-position text-h6 text-weight-bold"
+        >
+          <q-list class="text-secondary no-padding">
+            <q-item
+              clickable
+              v-ripple
+              to="/"
+              exact
+              active-class="menu-link"
+              @click="setPageTitle('Home')"
+            >
+              <q-item-section avatar>
+                <q-icon name="home"/>
+              </q-item-section>
 
-            <q-item-section>
-              Logout
-            </q-item-section>
-          </q-item>
+              <q-item-section>
+                Home
+              </q-item-section>
+            </q-item>
 
-        </q-list>
-      </q-scroll-area>
+            <q-item
+              clickable
+              v-ripple
+              to="/calendar"
+              exact
+              active-class="menu-link"
+              @click="setPageTitle('Calendar')"
+            >
+              <q-item-section avatar>
+                <q-icon name="edit_calendar"/>
+              </q-item-section>
 
-      <q-img class="absolute-top" src="../assets/avatar-bg2.jpg" style="height: 200px">
-        <div class="avatar-texts q-mx-lg q-mt-xs full-height bg-transparent">
-          <q-avatar size="130px" class="q-mb-xs">
-            <img src="../assets/avatar.jpg" alt="avatar_img"/>
-          </q-avatar>
-          <div v-if="userDetails.email" class="avatar-mail text-weight-bold">
-            @ {{ userDetails.email.split('@')[0] }}
+              <q-item-section>
+                Calendar
+              </q-item-section>
+            </q-item>
+
+            <q-item
+              clickable
+              v-ripple
+              to="/chart"
+              exact
+              active-class="menu-link"
+              @click="setPageTitle('Chart')"
+            >
+              <q-item-section avatar>
+                <q-icon name="bar_chart"/>
+              </q-item-section>
+
+              <q-item-section>
+                Chart
+              </q-item-section>
+            </q-item>
+
+            <q-space/>
+
+            <q-item
+              clickable
+              v-ripple
+              v-if="userDetails.userId"
+              @click="logoutUser"
+              class="absolute-bottom logout-btn"
+            >
+              <q-item-section avatar>
+                <q-icon name="logout"/>
+              </q-item-section>
+
+              <q-item-section>
+                Logout
+              </q-item-section>
+            </q-item>
+
+          </q-list>
+        </q-scroll-area>
+
+        <q-img class="absolute-top" src="../assets/avatar-bg2.jpg" style="height: 200px">
+          <div class="avatar-texts q-mx-lg q-mt-xs full-height bg-transparent">
+            <q-avatar size="130px" class="q-mb-xs">
+              <img src="../assets/avatar.jpg" alt="avatar_img"/>
+            </q-avatar>
+            <div v-if="userDetails.email" class="avatar-mail text-weight-bold">
+              @ {{ userDetails.email.split('@')[0] }}
+            </div>
           </div>
-        </div>
-      </q-img>
-    </q-drawer>
+        </q-img>
+      </q-drawer>
 
-    <q-page-container>
-      <router-view/>
-    </q-page-container>
-
+      <q-page-container>
+        <router-view/>
+      </q-page-container>
+    </q-pull-to-refresh>
   </q-layout>
 </template>
 
@@ -142,6 +143,13 @@ export default {
     setPageTitle(title) {
       this.pageTitle = title
     },
+    refresh(done) {
+      setTimeout(() => {
+        window.location.reload()
+        done()
+      }, 1000)
+
+    }
   },
   computed: {
     ...mapState('myStore', ['userDetails']),
