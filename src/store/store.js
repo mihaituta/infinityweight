@@ -441,6 +441,15 @@ const actions = {
   async populateDb() {
     const weightsArray = [
       {
+        date: '11 Oct 2021',
+        weight: 75.9
+      }, {
+        date: '10 Oct 2021',
+        weight: 76.2
+      }, {
+        date: '9 Oct 2021',
+        weight: 75.9
+      }, {
         date: '8 Oct 2021',
         weight: 76.6
       }, {

@@ -13,25 +13,22 @@
         </q-card-section>
 
         <q-card-section>
-          <div>CHANGE</div>
+          <div>7 DAYS</div>
           <q-separator/>
           <div class="content">
             <q-skeleton v-if="loadingStatus" type="rect"/>
-            <div v-else-if="weights.length > 0 && weights[0].weightDiff > 0" class="text-negative flex items-center">
+
+            <div v-else-if="weights.length > 0 && oneWeekChange > 0" class=" text-negative flex items-center">
               <q-icon name="north"/>
-              <!-- turn the string into a number to get rid of the zero after coma Ex: 35.0 -> 35 -->
-              <div> {{ +weights[0].weightDiff }} kg</div>
+              {{ +oneWeekChange }} kg
             </div>
 
-            <div v-else-if="weights.length > 0 && weights[0].weightDiff < 0"
-                 class="text-secondary-400 flex items-center">
+            <div v-else-if="weights.length > 0 && oneWeekChange < 0" class=" text-secondary-400 flex items-center">
               <q-icon name="south"/>
-              <!-- turn the string into a positive number (weight loss is a negative number in database)
-               and get rid of '-' when it is displayed -->
-              {{ -weights[0].weightDiff }} kg
+              {{ -oneWeekChange }} kg
             </div>
 
-            <div v-else-if="weights.length > 0 && weights[0].weightDiff === 0" class="text-grey-5">
+            <div v-else-if="weights.length > 0 && oneWeekChange === 0" class="text-grey-5">
               Same weight
             </div>
 
@@ -40,48 +37,50 @@
         </q-card-section>
 
         <q-card-section>
-          <div>THIS WEEK</div>
+          <div>1 MONTH</div>
           <q-separator/>
           <div class="content">
             <q-skeleton v-if="loadingStatus" type="rect"/>
 
-            <div v-else-if="weights.length > 0 && thisWeekChange > 0" class=" text-negative flex items-center">
-              <q-icon name="north"/>
-              {{ +thisWeekChange }} kg
-            </div>
-
-            <div v-else-if="weights.length > 0 && thisWeekChange < 0" class=" text-secondary-400 flex items-center">
-              <q-icon name="south"/>
-              {{ -thisWeekChange }} kg
-            </div>
-
-            <div v-else-if="weights.length > 0 && thisWeekChange === 0" class="text-grey-5">
-              Same weight
-            </div>
-
-            <div v-else class="text-grey-5">No weights</div>
-          </div>
-        </q-card-section>
-
-        <q-card-section>
-          <div>THIS MONTH</div>
-          <q-separator/>
-          <div class="content">
-            <q-skeleton v-if="loadingStatus" type="rect"/>
-
-            <div v-else-if="weights.length > 0 && thisMonthChange > 0" class=" text-negative flex items-end">
+            <div v-else-if="weights.length > 0 && oneMonthChange > 0" class=" text-negative flex items-end">
               <div class="flex align-items">
                 <q-icon name="north"/>
-                {{ +thisMonthChange }} kg
+                {{ +oneMonthChange }} kg
               </div>
             </div>
 
-            <div v-else-if="weights.length > 0 && thisMonthChange < 0" class=" text-secondary-400 flex items-center">
+            <div v-else-if="weights.length > 0 && oneMonthChange < 0" class=" text-secondary-400 flex items-center">
               <q-icon name="south"/>
-              {{ -thisMonthChange }} kg
+              {{ -oneMonthChange }} kg
             </div>
 
-            <div v-else-if="weights.length > 0 && thisMonthChange === 0" class="text-grey-5">
+            <div v-else-if="weights.length > 0 && oneMonthChange === 0" class="text-grey-5">
+              Same weight
+            </div>
+
+            <div v-else class="text-grey-5">No weights</div>
+          </div>
+        </q-card-section>
+
+        <q-card-section>
+          <div>1 YEAR</div>
+          <q-separator/>
+          <div class="content">
+            <q-skeleton v-if="loadingStatus" type="rect"/>
+
+            <div v-else-if="weights.length > 0 && oneYearChange > 0" class=" text-negative flex items-end">
+              <div class="flex align-items">
+                <q-icon name="north"/>
+                {{ +oneYearChange }} kg
+              </div>
+            </div>
+
+            <div v-else-if="weights.length > 0 && oneYearChange < 0" class=" text-secondary-400 flex items-center">
+              <q-icon name="south"/>
+              {{ -oneYearChange }} kg
+            </div>
+
+            <div v-else-if="weights.length > 0 && oneYearChange === 0" class="text-grey-5">
               Same weight
             </div>
 
@@ -94,7 +93,6 @@
           <q-separator/>
           <div class="content">
             <q-skeleton v-if="loadingStatus" type="rect"/>
-
             <div v-else-if="weights.length > 0 && thisYearChange > 0" class=" text-negative flex items-end">
               <div class="flex align-items">
                 <q-icon name="north"/>
@@ -118,7 +116,6 @@
         <q-card-section>
           <div>ALL TIME</div>
           <q-separator class="q-my-sm"/>
-
           <div class="content">
             <q-skeleton v-if="loadingStatus" type="rect"/>
             <div v-else-if="weights.length > 0 && allTimeChange > 0" class=" text-negative flex items-end">
@@ -330,7 +327,11 @@ export default defineComponent({
         return this.weights.filter(weight => {
           const searchTrim = date.formatDate(weight.date, 'DD MMMM YYYY').toLowerCase().replace(/\s+/g, '')
           const search = date.formatDate(weight.date, 'DD MMMM YYYY').toLowerCase()
+          const searchTrimShort = date.formatDate(weight.date, 'DD MMM YYYY').toLowerCase().replace(/\s+/g, '')
+          const searchShort = date.formatDate(weight.date, 'DD MMM YYYY').toLowerCase()
+          // search with different formats, Ex: 12 dec 2020, 12dec2020, 12 december 2020, 12december2020 will work
           return searchTrim.includes(this.searchDate.toLowerCase()) || search.includes(this.searchDate.toLowerCase())
+            || searchTrimShort.includes(this.searchDate.toLowerCase()) || searchShort.includes(this.searchDate.toLowerCase())
         })
       else
         return this.weights
@@ -339,7 +340,7 @@ export default defineComponent({
     // remove shadow of card on smaller screens
     cardShadow: () => useQuasar().screen.lt.sm,
 
-    thisWeekChange() {
+    oneWeekChange() {
       const mostRecentWeight = this.weights[0]
       const oneWeekAgo = new Date(new Date(new Date().setDate(new Date().getDate() - 7)).setHours(0, 0, 0, 0))
       let firstWeightOneWeekAgo
@@ -351,7 +352,7 @@ export default defineComponent({
       return parseFloat((mostRecentWeight.weight - firstWeightOneWeekAgo.weight).toFixed(1))
     },
 
-    thisMonthChange() {
+    oneMonthChange() {
       const mostRecentWeight = this.weights[0]
       const oneMonthAgo = new Date(new Date(new Date().setMonth(new Date().getMonth() - 1)).setHours(0, 0, 0, 0))
       let firstWeightOneMonthAgo
@@ -363,7 +364,7 @@ export default defineComponent({
       return parseFloat((mostRecentWeight.weight - firstWeightOneMonthAgo.weight).toFixed(1))
     },
 
-    thisYearChange() {
+    oneYearChange() {
       const mostRecentWeight = this.weights[0]
       const oneYearAgo = new Date(new Date(new Date().setFullYear(new Date().getFullYear() - 1)).setHours(0, 0, 0, 0))
       let firstWeightOneYearAgo
@@ -373,6 +374,18 @@ export default defineComponent({
         }
       })
       return parseFloat((mostRecentWeight.weight - firstWeightOneYearAgo.weight).toFixed(1))
+    },
+
+    thisYearChange() {
+      const mostRecentWeight = this.weights[0]
+      const oneYearAgo = new Date(new Date(new Date().getFullYear(), 0, 1).setHours(0, 0, 0, 0))
+      let firstWeightThisYear
+      this.weights.some(weight => {
+        if (oneYearAgo.getTime() <= weight.date.getTime()) {
+          firstWeightThisYear = weight
+        }
+      })
+      return parseFloat((mostRecentWeight.weight - firstWeightThisYear.weight).toFixed(1))
     },
 
     allTimeChange() {

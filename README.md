@@ -28,21 +28,32 @@ Users have to create an account to have their data saved in the database.
 The website has 3 main pages:
 - **Home**, has 2 sections:
   - **History** displays all weights as a list where users can **add, delete, update** and **search** weights by date.
-  - **Status** displays stats like **current weight** and the **weight lost** in the **last week, month, year** or **since the begining.**
+  - **Status** displays stats like **current weight** and the **weight lost** in **one week, one month, one year, this year** or **since the begining.**
 - **Calendar**, here the user can also **add, update** and **delete** weights directly on the calendar, the weight and that day's change are also displayed under each respective date.
-- **Chart**, here the user can see on a chart how they progressed in the **last week, month, 6 months, year to date**, or **since the beginning.**
+- **Chart**, here the user can see on a chart how they progressed in **one week, one month, 6 months, one year, this year** or **since the beginning.**
 
 When a weight is **added, updated** or **deleted**, the weight update difference between the other dates is also recalculated each time.
 
 # Installation
 
-**Project setup:**
+**Install dependencies:**
 ```
 npm install
 ```
 **Start local server:**
 ```
 quasar dev
+```
+
+**Start dev electron:**
+```
+quasar dev -m electron
+```
+
+**Start dev android cordova (requires an emulator):**
+
+```
+quasar dev -m cordova -T android
 ```
 
 ## Contact
