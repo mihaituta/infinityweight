@@ -191,19 +191,21 @@ const actions = {
         }
 
         // reminder notification for mobile that repeats everyday at 11am
-        cordova.plugins.notification.local.schedule({
-          title: 'Did you weigh yourself today?',
-          text: "Log your weight to keep track of your progress.",
-          foreground: true,
-          image: 'res//ic_launcher.png',
-          smallIcon: 'res//ic_launcher.png',
-          color: '#4DE6A1',
-          trigger: {every: {hour: 11}},
-          actions: [
-            {id: 'open', title: 'Open', launch: true},
-            {id: 'off', title: 'Turn off for today'},
-          ],
-        });
+        if (process.env.MODE === 'cordova') {
+          cordova.plugins.notification.local.schedule({
+            title: 'Did you weigh yourself today?',
+            text: "Log your weight to keep track of your progress.",
+            foreground: true,
+            image: 'res//ic_launcher.png',
+            smallIcon: 'res//ic_launcher.png',
+            color: '#4DE6A1',
+            trigger: {every: {hour: 11}},
+            actions: [
+              {id: 'open', title: 'Open', launch: true},
+              {id: 'off', title: 'Turn off for today'},
+            ],
+          });
+        }
 
       } else {
         // User is logged out
