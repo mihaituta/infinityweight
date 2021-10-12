@@ -16,6 +16,7 @@ Demo account: demo@gmail.com, password: 123123.
 - **Sass**
 - **JavaScript**
 - **Vue.js**
+- **Vuex**
 - **Quasar**
 - **Firebase**
 - Hosted on **Netlify**
