@@ -106,8 +106,6 @@ export default {
       openAddModal: false,
       updateWeightData: {},
       calendarAddDate: '',
-      // tempWeights: [],
-      // tempWeightStatus: '',
       weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       weekdayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
       month: [
@@ -151,7 +149,7 @@ export default {
     getWeight(day) {
       const selectedDay = this.currentDate.year + '/' + (this.currentDate.month + 1) + '/' + day
       const selectedDate = new Date(selectedDay)
-      const weightObj = this.weights.find(e => e.date.getTime() === selectedDate.getTime())
+      const weightObj = this.weights.find(weight =>  weight.date.toLocaleDateString() === selectedDate.toLocaleDateString())
       if (weightObj !== undefined) {
         return {
           weight: weightObj.weight,
@@ -163,7 +161,7 @@ export default {
       this.currentDate.date = date
       const selectedDay = this.currentDate.year + '/' + (this.currentDate.month + 1) + '/' + date
       const selectedDate = new Date(selectedDay)
-      const weight = this.weights.find(e => e.date.getTime() === selectedDate.getTime())
+      const weight = this.weights.find(weight => weight.date.toLocaleDateString() === selectedDate.toLocaleDateString())
       if (weight) {
         this.updateWeightData = weight
         this.openUpdateModal = true

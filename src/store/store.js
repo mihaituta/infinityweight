@@ -1,5 +1,4 @@
 import {
-  fbApp,
   fbAuth,
   fbDB,
   createUserWithEmailAndPassword,
@@ -8,7 +7,6 @@ import {
   signOut,
   collection,
   query,
-  addDoc,
   setDoc,
   updateDoc,
   getDoc,
@@ -17,10 +15,7 @@ import {
   doc,
   onSnapshot,
   orderBy,
-  runTransaction,
   writeBatch,
-  limit,
-  where
 } from 'boot/firebase'
 
 import {date, Notify} from "quasar";

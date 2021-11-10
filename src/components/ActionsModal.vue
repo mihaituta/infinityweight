@@ -144,7 +144,7 @@ export default {
       const weightChanged = {
         id: this.action.toLowerCase() === 'update' ? this.weightData.id : null,
         weight: parseFloat(this.weight),
-        date: this.calendarPageAddModal ? this.calendarAddDate : new Date(this.date.setHours(0, 0, 0, 0))
+        date: this.calendarPageAddModal ? this.calendarAddDate : new Date(this.date.setUTCHours(0, 0, 0, 0))
       }
       if (this.action.toLowerCase() === 'add') {
         this.addWeight(weightChanged)
